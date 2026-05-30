@@ -1,0 +1,58 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: healfiness
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ^*gljDz@7Wd7BS
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    container_name: healfiness-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/healfiness
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ^*gljDz@7Wd7BS
+      JWT_SECRET: gpxppbmmlxZuEcg3Kh05eF3JgnVqfTar+Kxk4w0gX0XHjBv8uDs0q3C6xFU7iR4gRphceQaVmROqDM7WxX0OXg==
+      JWT_EXPIRATION_MS: 3600000
+      JWT_REFRESH_EXPIRATION_MS: JWT_EXPIRATION_MS * 24 * 7
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    container_name: healfiness-frontend
+    restart: always
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    ports:
+      - "8081:8080"
+    environment:
+      API_URL: https://localhost:8080/v1/api-docs
+    depends_on:
+      - backend
+
+volumes:
+  postgres-data:

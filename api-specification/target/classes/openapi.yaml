@@ -1,0 +1,2529 @@
+openapi: 3.1.0
+info:
+  title: Healfiness Webshop API
+  description: Enterprise REST API for Healfiness Webshop
+  version: 1.0.0
+
+servers:
+  - url: 'https://localhost:8080'
+    description: Local development server
+  - url: https://api.healfiness.com
+    description: Production
+
+tags:
+  - name: Authentication
+    description: Authentication operations
+#  - name: Addresses
+#    description: Operations related to addresses
+#  - name: Categories
+#    description: Operations related to categories
+#  - name: Cities
+#    description: Operations related to cities
+#  - name: IsoCountryCodes
+#    description: Operations related to ISO country codes
+#  - name: Orders
+#    description: Operations related to orders
+#  - name: Payments
+#    description: Operations related to payments
+#  - name: Products
+#    description: Operations related to products
+#  - name: Shipments
+#    description: Operations related to shipments
+#  - name: ShoppingCarts
+#    description: Operations related to shopping carts
+  - name: Users
+    description: Operations related to users
+
+security:
+  - bearerAuth: []
+  - basicAuth: []
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login user
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /addresses:
+    get:
+      tags:
+        - Addresses
+      summary: Get addresses
+      description: Retrieve a list of all addresses
+      operationId: getAddresses
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: A list of addresses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressPageResponse'
+    post:
+      tags:
+        - Addresses
+      summary: Create an address
+      description: Create a new address with the provided details
+      operationId: createAddress
+      requestBody:
+        required: true
+        description: The address details to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressCreateRequest'
+      responses:
+        '201':
+          description: Address created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressResponse'
+        '400':
+          description: Bad request - invalid address details supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /categories:
+    get:
+      tags:
+        - Categories
+      summary: Get categories
+      description: Retrieve a list of all categories
+      operationId: getCategories
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: A list of categories
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryPageResponse'
+    post:
+      tags:
+        - Categories
+      summary: Create a category
+      description: Create a new category with the provided details
+      operationId: createCategory
+      requestBody:
+        required: true
+        description: The category details to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryCreateRequest'
+      responses:
+        '201':
+          description: Category created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+        '400':
+          description: Bad request - invalid category details supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /cities:
+    get:
+      tags:
+        - Cities
+      summary: Get cities
+      description: Retrieve a list of all cities
+      operationId: getCities
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: A list of cities
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CityPageResponse'
+    post:
+      tags:
+        - Cities
+      summary: Create a city
+      description: Create a new city with the provided details
+      operationId: createCity
+      requestBody:
+        required: true
+        description: The city details to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CityCreateRequest'
+      responses:
+        '201':
+          description: City created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CityResponse'
+        '400':
+          description: Bad request - invalid city details supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /cities/{cityId}:
+    get:
+      tags:
+        - Cities
+      summary: Find city by identifier
+      description: Retrieve details of a specific city by its identifier
+      operationId: findCityById
+      parameters:
+        - name: cityId
+          in: path
+          required: true
+          description: The ID of the city to fetch
+          schema:
+            type: integer
+            example: "123"
+      responses:
+        '200':
+          description: City details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CityResponse'
+        '400':
+          description: Bad request - invalid city ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: City not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /isoCountryCodes:
+    get:
+      tags:
+        - IsoCountryCodes
+      summary: Get ISO country codes
+      description: Retrieve a list of all ISO country codes
+      operationId: getIsoCountryCodes
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: A list of ISO country codes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsoCountryCodePageResponse'
+    post:
+      tags:
+        - IsoCountryCodes
+      summary: Create an ISO country code
+      description: Create a new ISO country code with the provided details
+      operationId: createIsoCountryCode
+      requestBody:
+        required: true
+        description: The ISO country code details to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IsoCountryCodeSummary'
+      responses:
+        '201':
+          description: ISO country code created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsoCountryCodeSummary'
+        '400':
+          description: Bad request - invalid ISO country code details supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /isoCountryCodes/{isoCountryCodeId}:
+    get:
+      tags:
+        - IsoCountryCodes
+      summary: Find ISO country code by identifier
+      description: Retrieve details of a specific ISO country code by its identifier
+      operationId: findIsoCountryCodeById
+      parameters:
+        - name: isoCountryCodeId
+          in: path
+          required: true
+          description: The ID of the ISO country code to fetch
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: ISO country code details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsoCountryCodeSummary'
+        '400':
+          description: Bad request - invalid ISO country code ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: ISO country code not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /orders:
+    get:
+      tags:
+        - Orders
+      summary: Get orders
+      description: Retrieve a list of all orders
+      operationId: getOrders
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: A list of orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderPageResponse'
+    post:
+      tags:
+        - Orders
+      summary: Create an order
+      description: Create a new order with the provided details
+      operationId: createOrder
+      requestBody:
+        required: true
+        description: The order details to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreateRequest'
+      responses:
+        '201':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '400':
+          description: Bad request - invalid order details supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /orders/{orderId}:
+    get:
+      tags:
+        - Orders
+      summary: Find order by identifier
+      description: Retrieve details of a specific order by its identifier
+      operationId: findOrderById
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          description: The ID of the order to fetch
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: Order details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '400':
+          description: Bad request - invalid order ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Order not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    patch:
+      tags:
+        - Orders
+      summary: Update an order partially by identifier
+      description: Update a specific order partially by its identifier
+      operationId: updateOrder
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          description: The ID of the order to update
+          schema:
+            $ref: '#/components/schemas/Id'
+      requestBody:
+        required: true
+        description: The updated order details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderUpdateRequest'
+      responses:
+        '200':
+          description: Order updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '400':
+          description: Bad request - invalid order details supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Order not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /payments:
+    get:
+      tags:
+        - Payments
+      summary: Get payments
+      description: Retrieve a list of all payments
+      operationId: getPayments
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: A list of payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentResponse'
+    post:
+      tags:
+        - Payments
+      summary: Create a payment
+      description: Create a new payment with the provided details
+      operationId: createPayment
+      requestBody:
+        required: true
+        description: The payment details to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentCreateRequest'
+      responses:
+        '201':
+          description: Payment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        '400':
+          description: Bad request - invalid payment details supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /payments/{paymentId}:
+    get:
+      tags:
+        - Payments
+      summary: Find payment by identifier
+      description: Retrieve details of a specific payment by its identifier
+      operationId: findPaymentById
+      parameters:
+        - name: paymentId
+          in: path
+          required: true
+          description: The ID of the payment to fetch
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: Payment details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        '400':
+          description: Bad request - invalid payment ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Payment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Get products
+      description: Retrieve a list of all products
+      operationId: getProducts
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: A list of products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductPageResponse'
+    post:
+      tags:
+        - Products
+      summary: Create a product
+      description: Create a new product with the provided details
+      operationId: createProduct
+      requestBody:
+        required: true
+        description: The product details to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreateRequest'
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          description: Bad request - invalid product details supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /products/{productId}:
+    get:
+      tags:
+        - Products
+      summary: Find product by identifier
+      description: Retrieve details of a specific product by its identifier
+      operationId: findProductById
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: The ID of the product to fetch
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: Product details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          description: Bad request - invalid product ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    patch:
+      tags:
+        - Products
+      summary: Update a product partially by identifier
+      description: Update a specific product partially by its identifier
+      operationId: updateProduct
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: The ID of the product to update
+          schema:
+            $ref: '#/components/schemas/Id'
+      requestBody:
+        required: true
+        description: The product details to update (only include fields that should be updated)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreateRequest'
+      responses:
+        '200':
+          description: Product details retrieved and updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          description: Bad request - invalid product ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+        - Products
+      summary: Delete a product
+      description: Remove a product from the catalog by its ID
+      operationId: deleteProduct
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: The ID of the product to delete
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: Product details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          description: Bad request - invalid product ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get users
+      description: Retrieve a list of all users
+      operationId: getUsers
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPageResponse'
+    post:
+      tags:
+        - Users
+      summary: Create a user
+      description: Create a new user with the provided details
+      operationId: createUser
+      requestBody:
+        required: true
+        description: The user details to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Bad request - invalid user details supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /users/{userId}:
+    get:
+      tags:
+        - Users
+      summary: Find user by identifier
+      description: Retrieve details of a specific user by its identifier
+      operationId: findUserById
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to fetch
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: User details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Bad request - invalid user ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    patch:
+      tags:
+        - Users
+      summary: Update a user partially by identifier
+      description: Update a specific user partially by its identifier
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to update
+          schema:
+            $ref: '#/components/schemas/Id'
+
+      requestBody:
+        required: true
+        description: The user details to update (only include fields that should be updated)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: User details retrieved and deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Bad request - invalid user ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /users/{userId}/addresses:
+    get:
+      tags:
+        - Users
+      summary: Get addresses for a user
+      description: Retrieve a list of all addresses associated with a specific user
+      operationId: getUserAddresses
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to fetch addresses for
+          schema:
+            $ref: '#/components/schemas/Id'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: A list of addresses for the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressPageResponse'
+        '400':
+          description: Bad request - invalid user ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /users/{userId}/addresses/{addressId}:
+    get:
+      tags:
+        - Users
+      summary: Find address for a user by identifier
+      description: Retrieve details of a specific address associated with a specific user by its identifier
+      operationId: findUserAddressById
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to fetch the address for
+          schema:
+            $ref: '#/components/schemas/Id'
+        - name: addressId
+          in: path
+          required: true
+          description: The ID of the address to fetch for the user
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: Address details retrieved successfully for the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressResponse'
+        '400':
+          description: Bad request - invalid user ID or address ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: User or address not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    post:
+      tags:
+        - Users
+      summary: Add an address for a user
+      description: Create a new address associated with a specific user
+      operationId: addUserAddress
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to add the address for
+          schema:
+            $ref: '#/components/schemas/Id'
+      requestBody:
+        required: true
+        description: The address details to create for the user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressCreateRequest'
+      responses:
+        '201':
+          description: Address created successfully for the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressResponse'
+        '400':
+          description: Bad request - invalid user ID or address details supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    patch:
+      tags:
+        - Users
+      summary: Update an address for a user
+      description: Update a specific address associated with a specific user by its identifier
+      operationId: updateUserAddress
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to update the address for
+          schema:
+            $ref: '#/components/schemas/Id'
+        - name: addressId
+          in: path
+          required: true
+          description: The ID of the address to update for the user
+          schema:
+            $ref: '#/components/schemas/Id'
+      requestBody:
+        required: true
+        description: The updated address details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressUpdateRequest'
+      responses:
+        '200':
+          description: Address details retrieved and updated successfully for the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressResponse'
+        '400':
+          description: Bad request - invalid user ID, address ID, or address details supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: User or address not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /users/{userId}/orders:
+    get:
+      tags:
+        - Users
+      summary: Get orders for a user
+      description: Retrieve a list of all orders associated with a specific user
+      operationId: getUserOrders
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to fetch orders for
+          schema:
+            $ref: '#/components/schemas/Id'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: A list of orders for the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderPageResponse'
+        '400':
+          description: Bad request - invalid user ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    post:
+      tags:
+          - Users
+      summary: Create an order for a user
+      description: Create a new order associated with a specific user
+      operationId: createUserOrder
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to create the order for
+          schema:
+              $ref: '#/components/schemas/Id'
+      requestBody:
+        required: true
+        description: The order details to create for the user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreateRequest'
+      responses:
+        '201':
+          description: Order created successfully for the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '400':
+          description: Bad request - invalid user ID or order details supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /users/{userId}/orders/{orderId}:
+    get:
+      tags:
+        - Users
+      summary: Find order for a user by identifier
+      description: Retrieve details of a specific order associated with a specific user by its identifier
+      operationId: findUserOrderById
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to fetch the order for
+          schema:
+            $ref: '#/components/schemas/Id'
+        - name: orderId
+          in: path
+          required: true
+          description: The ID of the order to fetch for the user
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: Order details retrieved successfully for the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '400':
+          description: Bad request - invalid user ID or order ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: User or order not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    patch:
+      tags:
+          - Users
+      summary: Update an order for a user
+      description: Update a specific order associated with a specific user by its identifier
+      operationId: updateUserOrder
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to update the order for
+          schema:
+              $ref: '#/components/schemas/Id'
+        - name: orderId
+          in: path
+          required: true
+          description: The ID of the order to update for the user
+          schema:
+              $ref: '#/components/schemas/Id'
+      requestBody:
+        required: true
+        description: The updated order details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderUpdateRequest'
+      responses:
+        '200':
+          description: Order details retrieved and updated successfully for the user
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/OrderResponse'
+        '400':
+          description: Bad request - invalid user ID, order ID, or order details supplied
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: User or order not found
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/ProblemDetails'
+    delete:
+        tags:
+            - Users
+        summary: Delete an order for a user
+        description: Remove a specific order associated with a specific user by its identifier
+        operationId: deleteUserOrder
+        parameters:
+          - name: userId
+            in: path
+            required: true
+            description: The ID of the user to delete the order for
+            schema:
+                $ref: '#/components/schemas/Id'
+          - name: orderId
+            in: path
+            required: true
+            description: The ID of the order to delete for the user
+            schema:
+                $ref: '#/components/schemas/Id'
+        responses:
+          '200':
+            description: Order details retrieved and deleted successfully for the user
+            content:
+              application/json:
+                schema:
+                    $ref: '#/components/schemas/OrderResponse'
+          '400':
+            description: Bad request - invalid user ID or order ID supplied
+            content:
+              application/json:
+                schema:
+                    $ref: '#/components/schemas/ProblemDetails'
+          '404':
+            description: User or order not found
+            content:
+              application/json:
+                schema:
+                    $ref: '#/components/schemas/ProblemDetails'
+
+  /shopping-carts:
+    get:
+      tags:
+        - ShoppingCarts
+      summary: Get shopping carts
+      description: Retrieve a list of all available shopping carts
+      operationId: getShoppingCarts
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: A list of shopping carts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShoppingCartPageResponse'
+    post:
+      tags:
+        - ShoppingCarts
+      summary: Create a shopping cart
+      description: Create a new shopping cart for a user
+      operationId: createShoppingCart
+      requestBody:
+        required: true
+        description: The shopping cart details to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShoppingCartCreateRequest'
+      responses:
+        '201':
+          description: Shopping cart created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShoppingCartResponse'
+        '400':
+          description: Bad request - invalid shopping cart details supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /shopping-carts/{shopping-cartId}:
+    get:
+      tags:
+        - ShoppingCarts
+      summary: Find shopping cart by identifier
+      description: Retrieve details of a specific shopping cart by its identifier
+      operationId: findShoppingCartById
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: The ID of the shopping cart to fetch
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: Shopping cart details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShoppingCartResponse'
+        '400':
+          description: Bad request - invalid shopping cart ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Shopping cart not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    patch:
+      tags:
+        - ShoppingCarts
+      summary: Update a shopping cart partially by identifier
+      description: Update a specific shopping cart partially by its identifier
+      operationId: updateShoppingCart
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: The ID of the shopping cart to update
+          schema:
+            $ref: '#/components/schemas/Id'
+      requestBody:
+        required: true
+        description: The shopping cart details to update (only include fields that should be updated)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShoppingCartCreateRequest'
+      responses:
+        '200':
+          description: Shopping cart details retrieved and updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShoppingCartResponse'
+        '400':
+          description: Bad request - invalid shopping cart ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Shopping cart not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /shipments:
+    get:
+      tags:
+        - Shipments
+      summary: Get shipments
+      description: Retrieve a list of all shipments
+      operationId: getShipments
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: A list of shipments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipmentPageResponse'
+    post:
+      tags:
+        - Shipments
+      summary: Create a shipment
+      description: Create a new shipment with the provided details
+      operationId: createShipment
+      requestBody:
+        required: true
+        description: The shipment details to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShipmentCreateRequest'
+      responses:
+        '201':
+          description: Shipment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipmentResponse'
+        '400':
+          description: Bad request - invalid shipment details supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /shipments/{shipmentId}:
+    get:
+      tags:
+        - Shipments
+      summary: Find shipment by identifier
+      description: Retrieve details of a specific shipment by its identifier
+      operationId: findShipmentById
+      parameters:
+        - name: shipmentId
+          in: path
+          required: true
+          description: The ID of the shipment to fetch
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: Shipment details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipmentResponse'
+        '400':
+          description: Bad request - invalid shipment ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Shipment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    patch:
+      tags:
+        - Shipments
+      summary: Update a shipment partially by identifier
+      description: Update a specific shipment partially by its identifier
+      operationId: updateShipment
+      parameters:
+        - name: shipmentId
+          in: path
+          required: true
+          description: The ID of the shipment to update
+          schema:
+            $ref: '#/components/schemas/Id'
+      requestBody:
+        required: true
+        description: The shipment details to update (only include fields that should be updated)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShipmentUpdateRequest'
+      responses:
+        '200':
+          description: Shipment details retrieved and updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipmentResponse'
+        '400':
+          description: Bad request - invalid shipment ID supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Shipment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+    basicAuth:
+      type: http
+      scheme: basic
+
+  parameters:
+
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+
+    Size:
+      name: size
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+
+    Sort:
+      name: sort
+      in: query
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+          example: createdBy,asc
+
+    TotalElements:
+      name: totalElements
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: 134
+
+    TotalPages:
+      name: totalPages
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: 7
+
+  schemas:
+
+    # =========================================================
+    # COMMON / SHARED
+    # =========================================================
+
+    Id:
+      type: integer
+      format: int64
+      readOnly: true
+      example: 123
+
+    Money:
+      type: number
+      format: double
+      example: 29.99
+
+    Timestamp:
+      type: string
+      format: date-time
+      example: "2026-05-07T14:30:00Z"
+
+    UserName:
+      type: string
+      minLength: 3
+      maxLength: 15
+      example: "johndoe"
+
+    Email:
+      type: string
+      format: email
+      example: "john.doe@mail.com"
+
+    PageMetaData:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 0
+
+        size:
+          type: integer
+          example: 20
+
+        totalElements:
+          type: integer
+          example: 1
+
+        totalPages:
+          type: integer
+          example: 1
+
+        last:
+          type: boolean
+          example: true
+
+        sortOrder:
+          $ref: '#/components/schemas/SortOrder'
+
+    PageResponse:
+      type: object
+      required:
+        - content
+        - pageMetaData
+      properties:
+        content:
+          type: array
+          items: { }
+
+        pageMetaData:
+          $ref: '#/components/schemas/PageMetaData'
+
+    ProblemDetails:
+      type: object
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - timestamp
+      properties:
+        type:
+          type: string
+          example: "https://api.healfiness.com/errors/validation"
+
+        title:
+          type: string
+          example: "Validation Error"
+
+        status:
+          type: integer
+          example: 400
+
+        detail:
+          type: string
+          example: "Validation failed for request body."
+
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+
+        violations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationViolation'
+
+    ValidationViolation:
+      type: object
+      properties:
+        field:
+          type: string
+          example: "email"
+
+        message:
+          type: string
+          example: "must be a valid email"
+
+    MetaData:
+      type: object
+      properties:
+        createUser:
+          $ref: '#/components/schemas/UserName'
+
+        createDate:
+          $ref: '#/components/schemas/Timestamp'
+
+        lastModifiedUser:
+          $ref: '#/components/schemas/UserName'
+
+        lastModifiedDate:
+          $ref: '#/components/schemas/Timestamp'
+
+        version:
+          type: integer
+          format: int64
+          example: 1
+
+    SortOrder:
+      type: object
+      properties:
+        property:
+          type: string
+          example: "createUser"
+
+        direction:
+          type: string
+          enum: [ASC, DESC]
+
+    # =========================================================
+    # AUTH
+    # =========================================================
+
+    LoginRequest:
+      type: object
+      required:
+        - login
+        - password
+      properties:
+        login:
+          type: string
+          oneOf:
+            - $ref: '#/components/schemas/UserName'
+            - $ref: '#/components/schemas/Email'
+
+        password:
+          type: string
+          format: password
+          minLength: 8
+
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+
+        refreshToken:
+          type: string
+
+        expiresIn:
+          type: integer
+          example: 3600
+
+        user:
+          $ref: '#/components/schemas/UserSummary'
+
+    # =========================================================
+    # ENUMS
+    # =========================================================
+
+    OrderStatus:
+      type: string
+      enum:
+        - PENDING
+        - AWAITING_PAYMENT
+        - PAID
+        - PROCESSING
+        - ON_HOLD
+        - BACK_ORDER
+        - PARTIALLY_SHIPPED
+        - SHIPPED
+        - DELIVERED
+        - COMPLETED
+        - CANCELLED
+        - REFUNDED
+        - RETURNED
+        - FAILED
+
+    AddressType:
+      type: string
+      enum:
+        - HOME
+        - DELIVERY
+        - PICKUP
+        - INVOICE
+
+    PaymentStatus:
+      type: string
+      enum:
+        - PENDING
+        - PAID
+        - FAILED
+        - REFUNDED
+
+    PaymentMethod:
+      type: string
+      enum:
+        - CREDIT_CARD
+        - PAYPAL
+        - INVOICE
+        - KLARNA
+        - GOOGLE_PAY
+        - SHOP
+
+    ShipmentStatus:
+      type: string
+      enum:
+        - PENDING
+        - SHIPPED
+        - DELIVERED
+        - RETURNED
+        - CANCELLED
+
+    ShippingType:
+      type: string
+      enum:
+        - STANDARD
+        - EXPRESS
+        - PICKUP
+
+    UserRole:
+      type: string
+      enum:
+        - ADMIN
+        - SHOP_MANAGER
+        - AUTHOR
+        - SUPPORT
+        - CUSTOMER
+        - GUEST
+
+    # =========================================================
+    # USER
+    # =========================================================
+
+    UserSummary:
+      type: object
+      required:
+        - id
+        - username
+        - email
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        username:
+          type: string
+          minLength: 3
+          maxLength: 15
+          example: "johndoe"
+
+        email:
+          type: string
+          format: email
+          example: "john.doe@mail.com"
+
+    UserResponse:
+      allOf:
+        - $ref: '#/components/schemas/UserSummary'
+        - type: object
+          properties:
+            firstName:
+              type: string
+              example: "John"
+
+            lastName:
+              type: string
+              example: "Doe"
+
+            phoneNumber:
+              type: string
+              example: "+491234567890"
+
+            role:
+              $ref: '#/components/schemas/UserRole'
+
+            addresses:
+              type: array
+              items:
+                $ref: '#/components/schemas/AddressResponse'
+
+            orders:
+              type: array
+              items:
+                $ref: '#/components/schemas/OrderSummary'
+
+            shoppingCarts:
+              type: array
+              items:
+                $ref: '#/components/schemas/ShoppingCartResponse'
+
+            abstractObjectMetaData:
+              $ref: '#/components/schemas/MetaData'
+
+    UserPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/PageResponse'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/UserResponse'
+
+    UserCreateRequest:
+      type: object
+      required:
+        - username
+        - email
+        - password
+        - role
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 15
+
+        email:
+          type: string
+          format: email
+
+        password:
+          type: string
+          minLength: 8
+          maxLength: 128
+          format: password
+
+        firstName:
+          type: string
+
+        lastName:
+          type: string
+
+        phoneNumber:
+          type: string
+          example: "+491234567890"
+
+        role:
+          $ref: '#/components/schemas/UserRole'
+
+    UserUpdateRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+
+        password:
+          type: string
+          minLength: 8
+          maxLength: 128
+          format: password
+
+        firstName:
+          type: string
+
+        lastName:
+          type: string
+
+        phoneNumber:
+          type: string
+          example: "+491234567890"
+
+        role:
+          $ref: '#/components/schemas/UserRole'
+
+    # =========================================================
+    # CATEGORY
+    # =========================================================
+
+    CategorySummary:
+      type: object
+      required:
+        - id
+        - name
+        - description
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        name:
+          type: string
+          example: "Supplements"
+
+        description:
+          type: string
+          example: "Products related to dietary supplements."
+
+    CategoryResponse:
+      allOf:
+        - $ref: '#/components/schemas/CategorySummary'
+        - type: object
+          properties:
+
+            products:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProductSummary'
+
+            metaData:
+              $ref: '#/components/schemas/MetaData'
+
+    CategoryPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/PageResponse'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/CategoryResponse'
+
+    CategoryCreateRequest:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+
+        description:
+          type: string
+
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductCreateRequest'
+
+    # =========================================================
+    # PRODUCT
+    # =========================================================
+
+    ProductSummary:
+      type: object
+      required:
+        - id
+        - name
+        - price
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        name:
+          type: string
+          minLength: 2
+          maxLength: 150
+          example: "Protein Powder"
+
+        price:
+          $ref: '#/components/schemas/Money'
+
+    ProductResponse:
+      allOf:
+        - $ref: '#/components/schemas/ProductSummary'
+        - type: object
+          required:
+            - stockQuantity
+            - category
+          properties:
+            description:
+              type: string
+              example: "High-quality whey protein powder."
+
+            stockQuantity:
+              type: integer
+              example: 100
+
+            category:
+              $ref: '#/components/schemas/CategorySummary'
+
+            abstractObjectMetaData:
+              $ref: '#/components/schemas/MetaData'
+
+    ProductPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/PageResponse'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProductResponse'
+
+    ProductCreateRequest:
+      type: object
+      required:
+        - name
+        - description
+        - price
+        - stockQuantity
+        - categoryId
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 150
+
+        description:
+          type: string
+          maxLength: 5000
+
+        price:
+          $ref: '#/components/schemas/Money'
+
+        stockQuantity:
+          type: integer
+          minimum: 0
+
+        categoryId:
+          $ref: '#/components/schemas/Id'
+
+    # =========================================================
+    # COUNTRY / CITY
+    # =========================================================
+
+    IsoCountryCodeSummary:
+      type: object
+      required:
+        - isoCountryCodesId
+        - isoCountryCode
+        - countryName
+      properties:
+        isoCountryCodesId:
+          $ref: '#/components/schemas/Id'
+
+        isoCountryCode:
+          type: string
+          minLength: 2
+          maxLength: 3
+          example: "DE"
+
+        countryName:
+          type: string
+          example: "Germany"
+
+    IsoCountryCodeResponse:
+      allOf:
+        - $ref: '#/components/schemas/IsoCountryCodeSummary'
+        - type: object
+          properties:
+            abstractObjectMetaData:
+              $ref: '#/components/schemas/MetaData'
+
+    IsoCountryCodePageResponse:
+      allOf:
+        - $ref: '#/components/schemas/PageResponse'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/IsoCountryCodeResponse'
+
+    CitySummary:
+      type: object
+      required:
+        - citiesId
+        - shortName
+        - name
+      properties:
+        citiesId:
+          $ref: '#/components/schemas/Id'
+
+        shortName:
+          type: string
+          minLength: 2
+          maxLength: 3
+          example: "HAM"
+
+        name:
+          type: string
+          example: "Hamburg"
+
+    CityResponse:
+      allOf:
+        - $ref: '#/components/schemas/CitySummary'
+        - type: object
+          properties:
+            isoCountryCode:
+              $ref: '#/components/schemas/IsoCountryCodeResponse'
+
+            abstractObjectMetaData:
+              $ref: '#/components/schemas/MetaData'
+
+    CityPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/PageResponse'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/CityResponse'
+
+    CityCreateRequest:
+      type: object
+      required:
+        - name
+        - isoCountryCodeId
+      properties:
+        name:
+          type: string
+
+        shortName:
+          type: string
+          minLength: 2
+          maxLength: 5
+
+        isoCountryCodeId:
+          $ref: '#/components/schemas/Id'
+
+    # =========================================================
+    # ADDRESS
+    # =========================================================
+
+    AddressResponse:
+      type: object
+      required:
+        - id
+        - street
+        - houseNumber
+        - postalCode
+        - city
+        - type
+        - userId
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        street:
+          type: string
+          maxLength: 255
+          example: "Main Street"
+
+        houseNumber:
+          type: string
+          maxLength: 20
+          example: "42A"
+
+        postalCode:
+          type: string
+          maxLength: 20
+          example: "20095"
+
+        suffix:
+          type: string
+          maxLength: 20
+          nullable: true
+
+        type:
+          $ref: '#/components/schemas/AddressType'
+
+        city:
+          $ref: '#/components/schemas/CityResponse'
+
+        userId:
+          $ref: '#/components/schemas/Id'
+
+        abstractObjectMetaData:
+          $ref: '#/components/schemas/MetaData'
+
+    AddressPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/PageResponse'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/AddressResponse'
+
+    AddressCreateRequest:
+      type: object
+      required:
+        - street
+        - houseNumber
+        - postalCode
+        - city
+        - type
+        - userId
+      properties:
+        street:
+          type: string
+
+        houseNumber:
+          type: string
+
+        postalCode:
+          type: string
+
+        suffix:
+          type: string
+          nullable: true
+
+        city:
+          $ref: '#/components/schemas/CityCreateRequest'
+
+        type:
+          $ref: '#/components/schemas/AddressType'
+
+        userId:
+          $ref: '#/components/schemas/Id'
+
+    AddressUpdateRequest:
+      type: object
+      properties:
+        street:
+          type: string
+
+        houseNumber:
+          type: string
+
+        postalCode:
+          type: string
+
+        suffix:
+          type: string
+          nullable: true
+
+        city:
+          $ref: '#/components/schemas/CityCreateRequest'
+
+        type:
+          $ref: '#/components/schemas/AddressType'
+
+    # =========================================================
+    # ORDER ITEMS
+    # =========================================================
+
+    OrderItemResponse:
+      type: object
+      required:
+        - id
+        - quantity
+        - product
+        - singlePriceAtOrderTime
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        quantity:
+          type: integer
+          minimum: 1
+          example: 1
+
+        singlePriceAtOrderTime:
+          $ref: '#/components/schemas/Money'
+
+        product:
+          $ref: '#/components/schemas/ProductSummary'
+
+        abstractObjectMetaData:
+          $ref: '#/components/schemas/MetaData'
+
+    OrderItemCreateRequest:
+      type: object
+      required:
+        - productId
+        - quantity
+      properties:
+        productId:
+          $ref: '#/components/schemas/Id'
+
+        quantity:
+          type: integer
+          minimum: 1
+
+    # =========================================================
+    # ORDER
+    # =========================================================
+
+    OrderSummary:
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        orderStatus:
+          $ref: '#/components/schemas/OrderStatus'
+
+        totalAmount:
+          $ref: '#/components/schemas/Money'
+
+    OrderResponse:
+      allOf:
+        - $ref: '#/components/schemas/OrderSummary'
+        - type: object
+          properties:
+            orderDate:
+              $ref: '#/components/schemas/Timestamp'
+
+            totalQuantity:
+              type: integer
+              example: 1
+
+            orderItems:
+              type: array
+              items:
+                $ref: '#/components/schemas/OrderItemResponse'
+
+            userId:
+              $ref: '#/components/schemas/Id'
+
+            abstractObjectMetaData:
+              $ref: '#/components/schemas/MetaData'
+
+    OrderPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/PageResponse'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/OrderResponse'
+
+    OrderCreateRequest:
+      type: object
+      required:
+        - userId
+        - orderItems
+        - orderStatus
+        - quantity
+        - totalAmount
+      properties:
+        userId:
+          $ref: '#/components/schemas/Id'
+
+        orderItems:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/OrderItemCreateRequest'
+
+        orderStatus:
+          $ref: '#/components/schemas/OrderStatus'
+
+        quantity:
+          type: integer
+
+        totalAmount:
+          $ref: '#/components/schemas/Money'
+
+    OrderUpdateRequest:
+      type: object
+      properties:
+        orderStatus:
+          $ref: '#/components/schemas/OrderStatus'
+
+        orderItems:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/OrderItemCreateRequest'
+
+        quantity:
+          type: integer
+
+        totalAmount:
+          $ref: '#/components/schemas/Money'
+
+    # =========================================================
+    # SHOPPING CART
+    # =========================================================
+
+    CartItemResponse:
+      type: object
+      required:
+        - id
+        - product
+        - quantity
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        product:
+          $ref: '#/components/schemas/ProductSummary'
+
+        quantity:
+          type: integer
+          minimum: 1
+          example: 1
+
+        abstractObjectMetaData:
+          $ref: '#/components/schemas/MetaData'
+
+    CartItemCreateRequest:
+      type: object
+      required:
+        - productId
+        - quantity
+      properties:
+        productId:
+          $ref: '#/components/schemas/Id'
+
+        quantity:
+          type: integer
+          minimum: 1
+          example: 1
+
+    ShoppingCartResponse:
+      type: object
+      required:
+        - id
+        - items
+        - totalAmount
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItemResponse'
+
+        totalAmount:
+          $ref: '#/components/schemas/Money'
+
+        userId:
+          $ref: '#/components/schemas/Id'
+
+        abstractObjectMetaData:
+          $ref: '#/components/schemas/MetaData'
+
+    ShoppingCartPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/PageResponse'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/ShoppingCartResponse'
+
+    ShoppingCartCreateRequest:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          $ref: '#/components/schemas/Id'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItemCreateRequest'
+
+    # =========================================================
+    # PAYMENT
+    # =========================================================
+
+    PaymentResponse:
+      type: object
+      required:
+        - id
+        - order
+        - paymentStatus
+        - paymentMethod
+        - paidAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        order:
+          $ref: '#/components/schemas/OrderResponse'
+
+        paymentStatus:
+          $ref: '#/components/schemas/PaymentStatus'
+
+        paymentMethod:
+          $ref: '#/components/schemas/PaymentMethod'
+
+        transactionId:
+          type: string
+          maxLength: 100
+          example: "txn_1234567890"
+
+        paidAt:
+          $ref: '#/components/schemas/Timestamp'
+
+        abstractObjectMetaData:
+          $ref: '#/components/schemas/MetaData'
+
+    PaymentCreateRequest:
+      type: object
+      required:
+        - orderId
+        - paymentMethod
+        - paymentStatus
+      properties:
+        orderId:
+          $ref: '#/components/schemas/Id'
+
+        paymentMethod:
+          $ref: '#/components/schemas/PaymentMethod'
+
+        paymentStatus:
+          $ref: '#/components/schemas/PaymentStatus'
+
+    # =========================================================
+    # SHIPMENT
+    # =========================================================
+
+    ShipmentSummary:
+      type: object
+      required:
+        - shipmentStatus
+        - shippingType
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        shipmentStatus:
+          $ref: '#/components/schemas/ShipmentStatus'
+
+        shippingType:
+          $ref: '#/components/schemas/ShippingType'
+
+        trackingNumber:
+          type: string
+          maxLength: 12
+          example: "1Z999AA10123"
+
+    ShipmentResponse:
+      allOf:
+        - $ref: '#/components/schemas/ShipmentSummary'
+        - type: object
+          properties:
+            order:
+              $ref: '#/components/schemas/OrderResponse'
+
+            address:
+              $ref: '#/components/schemas/AddressResponse'
+
+            shippedAt:
+              $ref: '#/components/schemas/Timestamp'
+
+            abstractObjectMetaData:
+              $ref: '#/components/schemas/MetaData'
+
+    ShipmentPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/PageResponse'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/ShipmentResponse'
+
+    ShipmentCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/ShipmentSummary'
+        - type: object
+          required:
+            - orderId
+            - addressId
+          properties:
+            orderId:
+              $ref: '#/components/schemas/Id'
+
+            addressId:
+              $ref: '#/components/schemas/Id'
+
+    ShipmentUpdateRequest:
+      type: object
+      properties:
+        shipmentStatus:
+          $ref: '#/components/schemas/ShipmentStatus'
+
+        shippingType:
+          $ref: '#/components/schemas/ShippingType'
+
+        shippedAt:
+          $ref: '#/components/schemas/Timestamp'

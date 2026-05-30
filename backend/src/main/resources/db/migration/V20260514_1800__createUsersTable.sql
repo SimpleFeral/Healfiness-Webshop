@@ -1,0 +1,25 @@
+CREATE TYPE user_roles AS ENUM (
+    'ADMIN',
+    'SHOP_MANAGER',
+    'AUTHOR',
+    'SUPPORT',
+    'CUSTOMER',
+    'GUEST'
+);
+
+CREATE TABLE users
+(
+    create_user CHARACTER VARYING(15) NOT NULL,
+    create_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_modified_user CHARACTER VARYING(15),
+    last_modified_date TIMESTAMP WITH TIME ZONE,
+    version BIGINT NOT NULL DEFAULT 0,
+    users_id SERIAL PRIMARY KEY,
+    first_name CHARACTER VARYING(255),
+    last_name CHARACTER VARYING(255),
+    user_name CHARACTER VARYING(15) NOT NULL UNIQUE,
+    email CHARACTER VARYING(255) NOT NULL UNIQUE,
+    password CHARACTER VARYING(255) NOT NULL,
+    phone_number CHARACTER VARYING(50),
+    role user_roles NOT NULL
+);

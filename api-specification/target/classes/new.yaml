@@ -1,0 +1,789 @@
+openapi: 3.1.0
+info:
+  title: Healfiness API
+  version: 1.0.0
+  description: Enterprise REST API for Healfiness Webshop
+
+servers:
+  - url: https://api.healfiness.com/api/v1
+    description: Production
+
+  - url: http://localhost:8080/api/v1
+    description: Local Development
+
+tags:
+  - name: Addresses
+    description: Operations related to addresses
+  - name: Categories
+    description: Operations related to categories
+  - name: Cities
+    description: Operations related to cities
+  - name: IsoCountryCodes
+    description: Operations related to ISO country codes
+  - name: Orders
+    description: Operations related to orders
+  - name: Payments
+    description: Operations related to payments
+  - name: Products
+    description: Operations related to products
+  - name: Shipments
+    description: Operations related to shipments
+  - name: ShoppingCarts
+    description: Operations related to shopping carts
+  - name: CartItems
+    description: Operations related to shopping cart items
+  - name: Users
+    description: Operations related to users
+
+security:
+  - bearerAuth: []
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    # =========================================================
+    # COMMON
+    # =========================================================
+
+    Id:
+      type: integer
+      format: int64
+      example: 1
+
+    Timestamp:
+      type: string
+      format: date-time
+      example: "2026-05-08T14:30:00Z"
+
+    Money:
+      type: number
+      format: double
+      example: 29.99
+
+    PageResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            type: object
+
+        page:
+          type: integer
+          example: 0
+
+        size:
+          type: integer
+          example: 20
+
+        totalElements:
+          type: integer
+          example: 134
+
+        totalPages:
+          type: integer
+          example: 7
+
+        first:
+          type: boolean
+
+        last:
+          type: boolean
+
+    ProblemDetails:
+      type: object
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - timestamp
+      properties:
+        type:
+          type: string
+          example: "https://api.healfiness.com/errors/validation"
+
+        title:
+          type: string
+          example: "Validation Error"
+
+        status:
+          type: integer
+          example: 400
+
+        detail:
+          type: string
+          example: "Validation failed for request body."
+
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+
+        violations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationViolation'
+
+    ValidationViolation:
+      type: object
+      properties:
+        field:
+          type: string
+          example: "email"
+
+        message:
+          type: string
+          example: "must be a valid email"
+
+    # =========================================================
+    # ENUMS
+    # =========================================================
+
+    UserRole:
+      type: string
+      enum:
+        - CUSTOMER
+        - ADMIN
+        - SUPPORT
+        - SHOP_MANAGER
+
+    OrderStatus:
+      type: string
+      enum:
+        - PENDING
+        - AWAITING_PAYMENT
+        - PAID
+        - PROCESSING
+        - SHIPPED
+        - DELIVERED
+        - COMPLETED
+        - CANCELLED
+        - REFUNDED
+
+    PaymentMethod:
+      type: string
+      enum:
+        - CREDIT_CARD
+        - PAYPAL
+        - KLARNA
+        - GOOGLE_PAY
+        - APPLE_PAY
+
+    PaymentStatus:
+      type: string
+      enum:
+        - PENDING
+        - PAID
+        - FAILED
+        - REFUNDED
+
+    ShipmentStatus:
+      type: string
+      enum:
+        - PENDING
+        - SHIPPED
+        - DELIVERED
+        - RETURNED
+
+    # =========================================================
+    # AUTH
+    # =========================================================
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+
+        password:
+          type: string
+          format: password
+          minLength: 8
+
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+
+        refreshToken:
+          type: string
+
+        expiresIn:
+          type: integer
+          example: 3600
+
+        user:
+          $ref: '#/components/schemas/UserSummary'
+
+    # =========================================================
+    # USER
+    # =========================================================
+
+    UserSummary:
+      type: object
+      required:
+        - id
+        - username
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        username:
+          type: string
+          example: "johndoe"
+
+    UserResponse:
+      allOf:
+        - $ref: '#/components/schemas/UserSummary'
+        - type: object
+          properties:
+            email:
+              type: string
+              format: email
+
+            firstName:
+              type: string
+
+            lastName:
+              type: string
+
+            role:
+              $ref: '#/components/schemas/UserRole'
+
+            createdAt:
+              $ref: '#/components/schemas/Timestamp'
+
+            updatedAt:
+              $ref: '#/components/schemas/Timestamp'
+
+    UserCreateRequest:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+
+        email:
+          type: string
+          format: email
+
+        password:
+          type: string
+          format: password
+          minLength: 8
+
+        firstName:
+          type: string
+
+        lastName:
+          type: string
+
+    UserUpdateRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+
+        lastName:
+          type: string
+
+    # =========================================================
+    # CATEGORY
+    # =========================================================
+
+    CategorySummary:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        name:
+          type: string
+          example: "Supplements"
+
+    CategoryResponse:
+      allOf:
+        - $ref: '#/components/schemas/CategorySummary'
+        - type: object
+          properties:
+            description:
+              type: string
+
+            createdAt:
+              $ref: '#/components/schemas/Timestamp'
+
+    CategoryCreateRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+
+        description:
+          type: string
+
+    # =========================================================
+    # PRODUCT
+    # =========================================================
+
+    ProductSummary:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        name:
+          type: string
+
+        price:
+          $ref: '#/components/schemas/Money'
+
+    ProductResponse:
+      allOf:
+        - $ref: '#/components/schemas/ProductSummary'
+        - type: object
+          properties:
+            description:
+              type: string
+
+            sku:
+              type: string
+              example: "PROTEIN-001"
+
+            stockQuantity:
+              type: integer
+
+            reservedStock:
+              type: integer
+
+            category:
+              $ref: '#/components/schemas/CategorySummary'
+
+            images:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProductImage'
+
+            createdAt:
+              $ref: '#/components/schemas/Timestamp'
+
+            updatedAt:
+              $ref: '#/components/schemas/Timestamp'
+
+    ProductCreateRequest:
+      type: object
+      required:
+        - name
+        - price
+        - categoryId
+      properties:
+        name:
+          type: string
+
+        description:
+          type: string
+
+        price:
+          $ref: '#/components/schemas/Money'
+
+        stockQuantity:
+          type: integer
+
+        categoryId:
+          $ref: '#/components/schemas/Id'
+
+    ProductUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+
+        description:
+          type: string
+
+        price:
+          $ref: '#/components/schemas/Money'
+
+        stockQuantity:
+          type: integer
+
+    ProductImage:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        imageUrl:
+          type: string
+          format: uri
+
+        altText:
+          type: string
+
+    # =========================================================
+    # ORDER
+    # =========================================================
+
+    OrderItemResponse:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        quantity:
+          type: integer
+
+        singlePriceAtOrderTime:
+          $ref: '#/components/schemas/Money'
+
+        product:
+          $ref: '#/components/schemas/ProductSummary'
+
+    OrderItemCreateRequest:
+      type: object
+      required:
+        - productId
+        - quantity
+      properties:
+        productId:
+          $ref: '#/components/schemas/Id'
+
+        quantity:
+          type: integer
+          minimum: 1
+
+    OrderSummary:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+
+        orderStatus:
+          $ref: '#/components/schemas/OrderStatus'
+
+        totalAmount:
+          $ref: '#/components/schemas/Money'
+
+    OrderResponse:
+      allOf:
+        - $ref: '#/components/schemas/OrderSummary'
+        - type: object
+          properties:
+            orderDate:
+              $ref: '#/components/schemas/Timestamp'
+
+            totalQuantity:
+              type: integer
+
+            user:
+              $ref: '#/components/schemas/UserSummary'
+
+            orderItems:
+              type: array
+              items:
+                $ref: '#/components/schemas/OrderItemResponse'
+
+    OrderCreateRequest:
+      type: object
+      required:
+        - userId
+        - orderItems
+      properties:
+        userId:
+          $ref: '#/components/schemas/Id'
+
+        orderItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItemCreateRequest'
+
+    OrderStatusUpdateRequest:
+      type: object
+      required:
+        - orderStatus
+      properties:
+        orderStatus:
+          $ref: '#/components/schemas/OrderStatus'
+
+paths:
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get users
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 20
+
+      responses:
+        '200':
+          description: Users loaded successfully
+
+    post:
+      tags:
+        - Users
+      summary: Register user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+      responses:
+        '201':
+          description: User created
+
+  /users/{userId}:
+    get:
+      tags:
+        - Users
+      summary: Find user by ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+
+    patch:
+      tags:
+        - Users
+      summary: Update user partially
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+
+      responses:
+        '200':
+          description: User updated
+
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Get products
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 20
+
+        - name: sort
+          in: query
+          schema:
+            type: string
+            example: "price,asc"
+
+      responses:
+        '200':
+          description: Products loaded
+
+    post:
+      tags:
+        - Products
+      summary: Create product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreateRequest'
+
+      responses:
+        '201':
+          description: Product created
+
+  /products/{productId}:
+    get:
+      tags:
+        - Products
+      summary: Find product by ID
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+
+      responses:
+        '200':
+          description: Product found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+
+    patch:
+      tags:
+        - Products
+      summary: Update product partially
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpdateRequest'
+
+      responses:
+        '200':
+          description: Product updated
+
+    delete:
+      tags:
+        - Products
+      summary: Delete product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+
+      responses:
+        '204':
+          description: Product deleted
+
+  /orders:
+    post:
+      tags:
+        - Orders
+      summary: Create order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreateRequest'
+
+      responses:
+        '201':
+          description: Order created
+
+  /orders/{orderId}:
+    get:
+      tags:
+        - Orders
+      summary: Find order by ID
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+
+      responses:
+        '200':
+          description: Order found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+
+  /orders/{orderId}/status:
+    patch:
+      tags:
+        - Orders
+      summary: Update order status
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderStatusUpdateRequest'
+
+      responses:
+        '200':
+          description: Order status updated
