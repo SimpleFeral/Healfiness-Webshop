@@ -18,7 +18,9 @@ services:
       retries: 10
 
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
     container_name: healfiness-backend
     restart: always
     ports:
@@ -36,7 +38,9 @@ services:
         condition: service_healthy
 
   frontend:
-    build: ./frontend
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
     container_name: healfiness-frontend
     restart: always
     ports:
