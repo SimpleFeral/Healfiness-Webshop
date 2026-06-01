@@ -23,7 +23,7 @@ public class CartItemEntity extends AbstractObjectMetaDataEntity implements Seri
     private ShoppingCartEntity shoppingCart;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "products_id", nullable = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
 
     @Column(nullable = false)

@@ -32,7 +32,7 @@ public class AddressEntity extends AbstractObjectMetaDataEntity implements Seria
     private String suffix;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cities_id", nullable = false)
+    @JoinColumn(name = "city_id", nullable = false)
     private CityEntity city;
 
     @Enumerated(EnumType.STRING)
@@ -41,7 +41,7 @@ public class AddressEntity extends AbstractObjectMetaDataEntity implements Seria
     private AddressType addressType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
     public AddressEntity() {

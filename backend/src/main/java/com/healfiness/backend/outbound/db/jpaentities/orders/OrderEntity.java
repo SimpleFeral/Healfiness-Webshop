@@ -22,7 +22,7 @@ public class OrderEntity extends AbstractObjectMetaDataEntity implements java.io
     private Long ordersId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
     @Column(nullable = false, updatable = false)

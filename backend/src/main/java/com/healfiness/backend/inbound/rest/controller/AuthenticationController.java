@@ -55,8 +55,4 @@ public class AuthenticationController {
         return ResponseEntity.ok(authResponse);
     }
 
-    @GetMapping("/ping")
-    public String ping() {
-        return "OK";
-    }
 }

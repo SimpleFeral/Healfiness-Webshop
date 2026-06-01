@@ -23,7 +23,7 @@ public class CityEntity extends AbstractObjectMetaDataEntity implements Serializ
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "iso_country_codes_id")
+    @JoinColumn(name = "iso_country_code_id")
     private IsoCountryCodesEntity isoCountryCode;
 
     public CityEntity() {

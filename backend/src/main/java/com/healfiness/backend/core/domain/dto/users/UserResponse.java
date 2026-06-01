@@ -15,7 +15,7 @@ public record UserResponse(
         Schemas.Id usersId,
 
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-        Schemas.UserName username,
+        Schemas.UserName userName,
 
         @Schema(type = "string", format = "email", requiredMode = Schema.RequiredMode.REQUIRED, example = "john.doe@mail.com")
         String email,

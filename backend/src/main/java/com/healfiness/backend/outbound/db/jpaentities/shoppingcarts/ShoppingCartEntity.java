@@ -19,7 +19,7 @@ public class ShoppingCartEntity extends AbstractObjectMetaDataEntity implements 
     private Long shoppingCartsId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
     @OneToMany(mappedBy = "shoppingCart")

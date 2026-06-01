@@ -21,8 +21,8 @@ create table products
     name character varying(255) not null unique,
     description text,
     price numeric(10, 2) not null,
-    stocjk_quantity integer not null,
-    category_id integer not null,
+    stock_quantity integer not null,
+    category_id bigint not null,
     constraint fk_category
         foreign key (category_id) references categories (categories_id)
 );
