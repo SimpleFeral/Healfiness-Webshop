@@ -11,11 +11,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/auth")
 @Tag(name = "Authentication", description = "Operations related to authentication and authorization")
 public class AuthenticationController {
 
@@ -25,7 +24,7 @@ public class AuthenticationController {
         this.authService = authService;
     }
 
-    @PostMapping(path = "/api/v1/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Request login",
             description = "Authenticate a user and return an authentication token",
             operationId = "requestLogin",
@@ -54,5 +53,10 @@ public class AuthenticationController {
             return ResponseEntity.status(401).build();
         }
         return ResponseEntity.ok(authResponse);
+    }
+
+    @GetMapping("/ping")
+    public String ping() {
+        return "OK";
     }
 }

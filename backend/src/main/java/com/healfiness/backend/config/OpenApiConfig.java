@@ -23,8 +23,8 @@ public class OpenApiConfig {
                         .description("Enterprise REST API for Healfiness Webshop")
                 )
                 .servers(List.of(
-                                new Server().url("http://localhost:8080").description("Local development server"),
-                                new Server().url("https://api.healfiness.com").description("Production")
+                                new Server().url("http://localhost:8080/api/v1").description("Local development server"),
+                                new Server().url("https://api.healfiness.com/api/v1").description("Production")
                         )
                 )
                 .addSecurityItem(new SecurityRequirement()

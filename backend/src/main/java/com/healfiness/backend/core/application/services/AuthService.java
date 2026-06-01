@@ -6,6 +6,7 @@ import com.healfiness.backend.core.domain.dto.users.UserSummary;
 import com.healfiness.backend.security.CustomUserDetails;
 import com.healfiness.backend.security.CustomUserDetailsService;
 import com.healfiness.backend.security.JwtService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class AuthService {
     private final CustomUserDetailsService customUserDetailsService;
 
     public AuthService(
-            AuthenticationManager authenticationManager,
+            @Qualifier("authenticationManager") AuthenticationManager authenticationManager,
             JwtService jwtService,
             CustomUserDetailsService customUserDetailsService
     ) {

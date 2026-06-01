@@ -5,8 +5,8 @@ services:
     restart: always
     environment:
       POSTGRES_DB: healfiness
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ^*gljDz@7Wd7BS
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -27,12 +27,12 @@ services:
       - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/healfiness
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: ^*gljDz@7Wd7BS
-      JWT_SECRET: gpxppbmmlxZuEcg3Kh05eF3JgnVqfTar+Kxk4w0gX0XHjBv8uDs0q3C6xFU7iR4gRphceQaVmROqDM7WxX0OXg==
-      JWT_EXPIRATION_MS: 3600000
-      JWT_REFRESH_EXPIRATION_MS: JWT_EXPIRATION_MS * 24 * 7
+      SPRING_DATASOURCE_URL: ${DATABASE_URL}
+      SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS}
+      JWT_REFRESH_EXPIRATION_MS: ${JWT_EXPIRATION_MS}
     depends_on:
       db:
         condition: service_healthy
@@ -45,16 +45,6 @@ services:
     restart: always
     ports:
       - "4200:80"
-    depends_on:
-      - backend
-
-  swagger-ui:
-    image: swaggerapi/swagger-ui
-    container_name: swagger-ui
-    ports:
-      - "8081:8080"
-    environment:
-      API_URL: https://localhost:8080/v1/api-docs
     depends_on:
       - backend
 
