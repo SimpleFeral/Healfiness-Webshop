@@ -18,11 +18,11 @@ public class ShoppingCartEntity extends AbstractObjectMetaDataEntity implements 
     @Column(columnDefinition = "SERIAL")
     private Long shoppingCartsId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @OneToMany(mappedBy = "shoppingCart")
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItemEntity> cartItems;
 
     @Column(nullable = false, precision = 10, scale = 2)

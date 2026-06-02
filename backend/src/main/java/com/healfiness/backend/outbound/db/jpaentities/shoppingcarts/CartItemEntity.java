@@ -18,7 +18,7 @@ public class CartItemEntity extends AbstractObjectMetaDataEntity implements Seri
     @Column(columnDefinition = "SERIAL")
     private Long cartItemsId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "shopping_cart_id", nullable = false)
     private ShoppingCartEntity shoppingCart;
 

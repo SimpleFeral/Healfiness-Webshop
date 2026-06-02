@@ -33,6 +33,8 @@ tags:
 #    description: Operations related to shopping carts
   - name: Users
     description: Operations related to users
+  - name: Me (current user)
+    description: Operations related to the current logged in user
 
 security:
   - bearerAuth: []

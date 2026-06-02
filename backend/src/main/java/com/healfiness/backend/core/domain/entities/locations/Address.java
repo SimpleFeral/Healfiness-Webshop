@@ -34,6 +34,24 @@ public class Address extends AbstractObjectMetaData {
     }
 
     public Address(
+            String street,
+            String houseNumber,
+            String postalCode,
+            String suffix,
+            City city,
+            AddressType addressType,
+            User user
+    ) {
+        this.street = street;
+        this.houseNumber = houseNumber;
+        this.postalCode = postalCode;
+        this.suffix = suffix;
+        this.city = city;
+        this.addressType = addressType;
+        this.user = user;
+    }
+
+    public Address(
             String createUser,
             Instant createDate,
             String lastModifiedUser,

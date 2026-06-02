@@ -18,11 +18,11 @@ public class OrderItemEntity extends AbstractObjectMetaDataEntity implements Ser
     @Column(columnDefinition = "SERIAL")
     private Long orderItemsId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "order_id", nullable = false)
     private OrderEntity order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
 

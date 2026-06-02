@@ -1,28 +1,94 @@
 package com.healfiness.backend.core.application.services;
 
+import com.healfiness.backend.core.application.ports.locations.AddressDbPort;
 import com.healfiness.backend.core.domain.dto.locations.AddressCreateRequest;
 import com.healfiness.backend.core.domain.dto.locations.AddressResponse;
+import com.healfiness.backend.core.domain.dto.locations.city.CityResponse;
+import com.healfiness.backend.core.domain.dto.locations.isoCountryCode.IsoCountryCodeResponse;
+import com.healfiness.backend.core.domain.entities.locations.Address;
+import com.healfiness.backend.core.domain.entities.locations.City;
+import com.healfiness.backend.core.domain.entities.locations.IsoCountryCodes;
+import com.healfiness.backend.core.domain.entities.users.User;
+import com.healfiness.backend.core.domain.util.AuditingMapper;
 import com.healfiness.backend.shared.components.Schemas;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AddressService {
 
+    private final AddressDbPort addressDbPort;
+
+    private final AuditingMapper auditingMapper;
+
+    public AddressService(
+            AddressDbPort addressDbPort,
+            AuditingMapper auditingMapper
+    ) {
+        this.addressDbPort = addressDbPort;
+        this.auditingMapper = auditingMapper;
+    }
+
     public AddressResponse createAddressForCurrentUser(
-            Long usersId,
+            Long userId,
             AddressCreateRequest addressCreateRequest
     ) {
-        AddressResponse response = new AddressResponse(
-                new Schemas.Id(1L),
+        User user = new User();
+        user.setUsersId(userId);
+
+        IsoCountryCodes isoCountryCodes = new IsoCountryCodes();
+        isoCountryCodes.setIsoCountryCodesId(addressCreateRequest.city().isoCountryCodeId());
+
+        City city = new City();
+        city.setShortName(addressCreateRequest.city().shortName());
+        city.setName(addressCreateRequest.city().name());
+        city.setIsoCountryCode(isoCountryCodes);
+
+        Address addressToCreate = new Address(
                 addressCreateRequest.street(),
                 addressCreateRequest.houseNumber(),
                 addressCreateRequest.postalCode(),
-                addressCreateRequest.suffix(),
+                StringUtils.isNotBlank(addressCreateRequest.suffix())
+                        ? addressCreateRequest.suffix()
+                        : null,
+                city,
                 addressCreateRequest.type(),
-                null,
-                new Schemas.Id(usersId),
-                null
+                user
         );
-        return response;
+
+        Address savedAddress = addressDbPort.save(addressToCreate);
+
+        return mapToAddressResponse(savedAddress);
+    }
+
+    public AddressResponse findAddressById(Long addressId) {
+        Address foundAddress = addressDbPort.findById(addressId);
+
+        return mapToAddressResponse(foundAddress);
+    }
+
+    public AddressResponse mapToAddressResponse(Address addressToMap) {
+        return new AddressResponse(
+                new Schemas.Id(addressToMap.getAddressesId()),
+                addressToMap.getStreet(),
+                addressToMap.getHouseNumber(),
+                addressToMap.getPostalCode(),
+                addressToMap.getSuffix(),
+                addressToMap.getAddressType(),
+                new CityResponse(
+                        new Schemas.Id(addressToMap.getCity().getCitiesId()),
+                        addressToMap.getCity().getShortName(),
+                        addressToMap.getCity().getName(),
+                        new IsoCountryCodeResponse(
+                                new Schemas.Id(addressToMap.getCity().getIsoCountryCode().getIsoCountryCodesId()),
+                                addressToMap.getCity().getIsoCountryCode().getIsoCountryCode(),
+                                addressToMap.getCity().getIsoCountryCode().getCountryName(),
+                                auditingMapper.mapAuditingFields(addressToMap.getCity().getIsoCountryCode())
+                        ),
+                        auditingMapper.mapAuditingFields(addressToMap.getCity())
+                ),
+                new Schemas.Id(addressToMap.getUser().getUsersId()),
+                auditingMapper.mapAuditingFields(addressToMap)
+        );
     }
 }

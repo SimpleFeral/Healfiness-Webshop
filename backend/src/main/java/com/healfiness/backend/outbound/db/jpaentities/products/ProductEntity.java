@@ -28,7 +28,7 @@ public class ProductEntity extends AbstractObjectMetaDataEntity implements Seria
     @Column(nullable = false)
     private Integer stockQuantity;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryEntity category;
 

@@ -31,7 +31,7 @@ public class AddressEntity extends AbstractObjectMetaDataEntity implements Seria
 
     private String suffix;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "city_id", nullable = false)
     private CityEntity city;
 
@@ -40,7 +40,7 @@ public class AddressEntity extends AbstractObjectMetaDataEntity implements Seria
     @JdbcType(PostgreSQLEnumJdbcType.class)
     private AddressType addressType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 

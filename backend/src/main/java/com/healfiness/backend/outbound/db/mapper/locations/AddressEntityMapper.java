@@ -9,4 +9,6 @@ import org.mapstruct.MappingConstants;
 public interface AddressEntityMapper {
 
     Address toDomainEntity(AddressEntity addressEntity);
+
+    AddressEntity toJpaEntity(Address address);
 }

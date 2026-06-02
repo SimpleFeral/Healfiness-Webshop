@@ -21,7 +21,7 @@ public class OrderEntity extends AbstractObjectMetaDataEntity implements java.io
     @Column(columnDefinition = "SERIAL")
     private Long ordersId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 

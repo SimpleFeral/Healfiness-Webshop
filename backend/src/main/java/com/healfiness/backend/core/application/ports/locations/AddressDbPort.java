@@ -6,4 +6,8 @@ import java.util.List;
 
 public interface AddressDbPort {
     List<Address> findAddressesByUserId(Long usersId);
+
+    Address findById(Long addressId);
+
+    Address save(Address addressToCreate);
 }
