@@ -30,4 +30,13 @@ public class OrderAdapter implements OrderDbPort {
                 .map(mapper::toDomainEntity)
                 .toList();
     }
+
+    @Override
+    public Order save(Order orderToCreate) {
+        return mapper.toDomainEntity(
+                orderRepository.save(
+                        mapper.toJpaEntity(orderToCreate)
+                )
+        );
+    }
 }

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record AddressCreateRequest(
 
-        @NotBlank(message = "Blank street detected. Please provide a valid street.")
+         @NotBlank(message = "Blank street detected. Please provide a valid street.")
          String street,
 
          @NotBlank(message = "Blank house number detected. Please provide a valid house number.")

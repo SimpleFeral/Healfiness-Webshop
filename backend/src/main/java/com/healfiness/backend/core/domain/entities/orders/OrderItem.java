@@ -31,6 +31,20 @@ public class OrderItem extends AbstractObjectMetaData {
     }
 
     public OrderItem(
+            Order order,
+            Product product,
+            Integer quantity,
+            Instant orderDate,
+            BigDecimal singlePriceAtOrderTime
+    ) {
+        this.order = order;
+        this.product = product;
+        this.quantity = quantity;
+        this.orderDate = orderDate;
+        this.singlePriceAtOrderTime = singlePriceAtOrderTime;
+    }
+
+    public OrderItem(
             String createUser,
             Instant createDate,
             String lastModifiedUser,

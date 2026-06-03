@@ -39,6 +39,26 @@ public class Product extends AbstractObjectMetaData {
             String name,
             String description,
             BigDecimal price,
+            Integer stockQuantity
+    ) {
+        super(createUser, createDate, lastModifiedUser, lastModifiedDate, version);
+        this.productsId = productsId;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+    }
+
+    public Product(
+            String createUser,
+            Instant createDate,
+            String lastModifiedUser,
+            Instant lastModifiedDate,
+            Long version,
+            Long productsId,
+            String name,
+            String description,
+            BigDecimal price,
             Integer stockQuantity,
             Category category
     ) {

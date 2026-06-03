@@ -30,7 +30,7 @@ public class OrderEntity extends AbstractObjectMetaDataEntity implements java.io
 
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private OrderStatus orderStatus;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

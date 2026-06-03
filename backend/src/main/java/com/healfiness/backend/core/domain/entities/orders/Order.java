@@ -89,6 +89,14 @@ public class Order extends AbstractObjectMetaData {
         this.orderStatus = orderStatus;
     }
 
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
     public Integer getQuantity() {
         return quantity;
     }

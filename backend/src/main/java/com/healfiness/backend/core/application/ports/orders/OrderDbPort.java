@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface OrderDbPort {
     List<Order> findOrdersByUserId(Long usersId);
+
+    Order save(Order orderToCreate);
 }
