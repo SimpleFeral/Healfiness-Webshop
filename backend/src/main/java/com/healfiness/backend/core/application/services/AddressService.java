@@ -5,14 +5,21 @@ import com.healfiness.backend.core.domain.dto.locations.AddressCreateRequest;
 import com.healfiness.backend.core.domain.dto.locations.AddressResponse;
 import com.healfiness.backend.core.domain.dto.locations.city.CityResponse;
 import com.healfiness.backend.core.domain.dto.locations.isoCountryCode.IsoCountryCodeResponse;
+import com.healfiness.backend.core.domain.dto.page.PageMetaData;
+import com.healfiness.backend.core.domain.dto.page.PageResponse;
+import com.healfiness.backend.core.domain.dto.page.SortOrder;
 import com.healfiness.backend.core.domain.entities.locations.Address;
 import com.healfiness.backend.core.domain.entities.locations.City;
 import com.healfiness.backend.core.domain.entities.locations.IsoCountryCodes;
 import com.healfiness.backend.core.domain.entities.users.User;
 import com.healfiness.backend.core.domain.util.AuditingMapper;
 import com.healfiness.backend.shared.components.Schemas;
+import com.healfiness.backend.shared.util.SortOrderMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AddressService {
@@ -89,6 +96,26 @@ public class AddressService {
                 ),
                 new Schemas.Id(addressToMap.getUser().getUsersId()),
                 auditingMapper.mapAuditingFields(addressToMap)
+        );
+    }
+
+    public PageResponse<AddressResponse> findAddressesByCurrentUser(
+            Long usersId,
+            Integer page,
+            Integer size,
+            List<SortOrder> sortOrders
+    ) {
+        Page<Address> addresses = addressDbPort.findAddressesByCurrentUser(usersId, page, size, sortOrders);
+        return new PageResponse<>(
+                addresses.stream().map(this::mapToAddressResponse).toList(),
+                new PageMetaData(
+                        addresses.getNumber(),
+                        addresses.getSize(),
+                        addresses.getTotalElements(),
+                        addresses.getTotalPages(),
+                        addresses.isLast(),
+                        SortOrderMapper.mapToDomainSort(addresses.getSort())
+                )
         );
     }
 }

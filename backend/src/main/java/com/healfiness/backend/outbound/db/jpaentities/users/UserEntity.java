@@ -6,6 +6,7 @@ import com.healfiness.backend.outbound.db.jpaentities.orders.OrderEntity;
 import com.healfiness.backend.outbound.db.jpaentities.shoppingcarts.ShoppingCartEntity;
 import com.healfiness.backend.shared.UserRoles;
 import jakarta.persistence.*;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 
@@ -175,6 +176,19 @@ public class UserEntity extends AbstractObjectMetaDataEntity implements Serializ
 
     public void setShoppingCarts(List<ShoppingCartEntity> shoppingCarts) {
         this.shoppingCarts = shoppingCarts;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (getCreateUser()  == null || StringUtils.isBlank(getCreateUser())
+                || getCreateUser().equalsIgnoreCase("anonymousUser")) {
+            setCreateUser(getUserName());
+        }
+
+        if (getLastModifiedUser() == null || StringUtils.isBlank(getLastModifiedUser())
+                || getLastModifiedUser().equalsIgnoreCase("anonymousUser")) {
+            setLastModifiedUser(getUserName());
+        }
     }
 
     @Override

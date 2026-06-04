@@ -1,12 +1,10 @@
 package com.healfiness.backend.shared.util;
 
-import com.healfiness.backend.core.domain.dto.MetaData;
 import com.healfiness.backend.core.domain.dto.locations.AddressResponse;
 import com.healfiness.backend.core.domain.dto.orders.OrderResponse;
 import com.healfiness.backend.core.domain.dto.shoppingcarts.ShoppingCartResponse;
 import com.healfiness.backend.core.domain.dto.users.UserFlatDatabaseProjection;
 import com.healfiness.backend.core.domain.dto.users.UserResponse;
-import com.healfiness.backend.core.domain.entities.AbstractObjectMetaData;
 import com.healfiness.backend.core.domain.entities.users.User;
 import com.healfiness.backend.outbound.db.jpaentities.locations.AddressEntity;
 import com.healfiness.backend.outbound.db.jpaentities.orders.OrderEntity;
@@ -53,4 +51,6 @@ public interface GlobalUserMapper {
     Schemas.UserName maptoWrapperUserName(String value);
 
     User toDomainEntity(UserEntity userEntity);
+
+    UserEntity toJpaEntity(User userToCreate);
 }

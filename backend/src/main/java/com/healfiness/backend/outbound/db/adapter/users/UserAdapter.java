@@ -1,6 +1,7 @@
 package com.healfiness.backend.outbound.db.adapter.users;
 
 import com.healfiness.backend.core.application.ports.users.UserDbPort;
+import com.healfiness.backend.core.domain.dto.exceptions.ResourceNotFoundException;
 import com.healfiness.backend.core.domain.dto.page.PageMetaData;
 import com.healfiness.backend.core.domain.dto.page.PageResponse;
 import com.healfiness.backend.core.domain.dto.page.SortOrder;
@@ -92,6 +93,14 @@ public class UserAdapter implements UserDbPort {
 
     @Override
     public User findById(Long usersId) {
-        return mapper.toDomainEntity(userRepository.findById(usersId).orElse(null));
+        return mapper.toDomainEntity(
+                userRepository.findById(usersId)
+                        .orElseThrow(() -> new ResourceNotFoundException("User with id " + usersId + " not found"))
+        );
+    }
+
+    @Override
+    public User save(User userToCreate) {
+        return mapper.toDomainEntity(userRepository.save(mapper.toJpaEntity(userToCreate)));
     }
 }

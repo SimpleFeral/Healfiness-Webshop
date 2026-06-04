@@ -4,10 +4,15 @@ import com.healfiness.backend.core.application.services.AddressService;
 import com.healfiness.backend.core.application.services.OrderService;
 import com.healfiness.backend.core.application.services.UserService;
 import com.healfiness.backend.core.domain.dto.locations.AddressCreateRequest;
+import com.healfiness.backend.core.domain.dto.locations.AddressPageResponse;
 import com.healfiness.backend.core.domain.dto.locations.AddressResponse;
 import com.healfiness.backend.core.domain.dto.orders.OrderCreateRequest;
+import com.healfiness.backend.core.domain.dto.orders.OrderPageResponse;
 import com.healfiness.backend.core.domain.dto.orders.OrderResponse;
+import com.healfiness.backend.core.domain.dto.page.PageResponse;
+import com.healfiness.backend.core.domain.dto.page.SortOrder;
 import com.healfiness.backend.core.domain.dto.users.UserResponse;
+import com.healfiness.backend.core.domain.util.SortParser;
 import com.healfiness.backend.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,13 +25,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users/me")
@@ -50,8 +53,39 @@ public class MeController {
     @GetMapping
     public ResponseEntity<UserResponse> getMe(
             @AuthenticationPrincipal CustomUserDetails customUserDetails
-    ) throws Exception {
-        return ResponseEntity.ok(userService.findById(customUserDetails.getUsersId()));
+    ) {
+        return ResponseEntity.ok(userService.findUserById(customUserDetails.getUsersId()));
+    }
+
+    @GetMapping(path = "/addresses", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Get addresses of current user",
+            description = "Retrieve a list of all addresses associated with the current logged-in user",
+            operationId = "findAddressesByCurrentUser",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "A list of addresses for the current user",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = AddressPageResponse.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "401",
+                            description = "Unauthorized - user is not authenticated",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ProblemDetail.class)
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<PageResponse<AddressResponse>> getCurrentUserAddresses(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(name = "size", required = false, defaultValue = "20") Integer size,
+            @RequestParam(name = "sort", required = false) List<String> sort
+    ) {
+        List<SortOrder> sortOrders = SortParser.parse(sort);
+
+        return ResponseEntity.ok(addressService.findAddressesByCurrentUser(customUserDetails.getUsersId(), page, size, sortOrders));
     }
 
     @PostMapping(path = "/addresses",
@@ -60,7 +94,7 @@ public class MeController {
     )
     @Operation(summary = "Add an address for current user",
             description = "Create a new address associated with the current logged in user",
-            operationId = "createUsersMeAddress",
+            operationId = "createAddressForCurrentUser",
             responses = {
                     @ApiResponse(responseCode = "201",
                             description = "Address created successfully for the current user",
@@ -99,13 +133,44 @@ public class MeController {
         return ResponseEntity.created(location).body(response);
     }
 
+    @GetMapping(path = "/orders", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Get orders of current user",
+            description = "Retrieve a list of all orders associated with the current logged-in user",
+            operationId = "findOrdersByCurrentUser",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "A list of orders for the current user",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = OrderPageResponse.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "401",
+                            description = "Unauthorized - user is not authenticated",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ProblemDetail.class)
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<PageResponse<OrderResponse>> getCurrentUserOrders(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(name = "size", required = false, defaultValue = "20") Integer size,
+            @RequestParam(name = "sort", required = false) List<String> sort
+    ) {
+        List<SortOrder> sortOrders = SortParser.parse(sort);
+
+        return ResponseEntity.ok(orderService.findOrdersByCurrentUser(customUserDetails.getUsersId(), page, size, sortOrders));
+    }
+
     @PostMapping(path = "/orders",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @Operation(summary = "Add an order for current user",
             description = "Create a new order associated with the current logged-in user",
-            operationId = "createUsersMeOrder",
+            operationId = "createOrderForCurrentUser",
             responses = {
                     @ApiResponse(responseCode = "201",
                             description = "Order created successfully for the current user",

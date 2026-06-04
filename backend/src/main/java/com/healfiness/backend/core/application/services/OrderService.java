@@ -5,6 +5,8 @@ import com.healfiness.backend.core.application.ports.products.ProductDbPort;
 import com.healfiness.backend.core.domain.dto.orders.OrderCreateRequest;
 import com.healfiness.backend.core.domain.dto.orders.OrderItemResponse;
 import com.healfiness.backend.core.domain.dto.orders.OrderResponse;
+import com.healfiness.backend.core.domain.dto.page.PageResponse;
+import com.healfiness.backend.core.domain.dto.page.SortOrder;
 import com.healfiness.backend.core.domain.dto.products.ProductSummary;
 import com.healfiness.backend.core.domain.entities.orders.Order;
 import com.healfiness.backend.core.domain.entities.orders.OrderItem;
@@ -85,5 +87,14 @@ public class OrderService {
                 ).toList(),
                 new Schemas.Id(savedOrder.getUser().getUsersId())
         );
+    }
+
+    public PageResponse<OrderResponse> findOrdersByCurrentUser(
+            Long usersId,
+            Integer page,
+            Integer size,
+            List<SortOrder> sortOrders
+    ) {
+        return null;
     }
 }

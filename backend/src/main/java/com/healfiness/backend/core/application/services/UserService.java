@@ -4,14 +4,19 @@ import com.healfiness.backend.core.application.ports.locations.AddressDbPort;
 import com.healfiness.backend.core.application.ports.orders.OrderDbPort;
 import com.healfiness.backend.core.application.ports.shoppingcarts.ShoppingCartDbPort;
 import com.healfiness.backend.core.application.ports.users.UserDbPort;
+import com.healfiness.backend.core.domain.dto.exceptions.ResourceNotFoundException;
 import com.healfiness.backend.core.domain.dto.page.PageMetaData;
 import com.healfiness.backend.core.domain.dto.page.PageResponse;
 import com.healfiness.backend.core.domain.dto.page.SortOrder;
+import com.healfiness.backend.core.domain.dto.users.UserCreateRequest;
 import com.healfiness.backend.core.domain.dto.users.UserResponse;
 import com.healfiness.backend.core.domain.entities.users.User;
 import com.healfiness.backend.shared.util.GlobalUserMapper;
 import com.healfiness.backend.shared.util.SortOrderMapper;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,18 +35,22 @@ public class UserService {
 
     private final GlobalUserMapper globalUserMapper;
 
+    private final PasswordEncoder passwordEncoder;
+
     public UserService(
             UserDbPort userDbPort,
             AddressDbPort addressDbPort,
             OrderDbPort orderDbPort,
             ShoppingCartDbPort shoppingCartDbPort,
-            GlobalUserMapper globalUserMapper
+            GlobalUserMapper globalUserMapper,
+            @Qualifier("passwordEncoder") PasswordEncoder passwordEncoder
     ) {
         this.userDbPort = userDbPort;
         this.addressDbPort = addressDbPort;
         this.orderDbPort = orderDbPort;
         this.shoppingCartDbPort = shoppingCartDbPort;
         this.globalUserMapper = globalUserMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public PageResponse<UserResponse> findAllUsers(
@@ -71,12 +80,27 @@ public class UserService {
         );
     }
 
-    public UserResponse findById(Long usersId) throws Exception {
+    public UserResponse findUserById(Long usersId) {
         User foundUser = userDbPort.findById(usersId);
         if (foundUser != null) {
             return globalUserMapper.toUserResponse(foundUser);
         } else {
-            throw new Exception("User with id " + usersId + " not found");
+            throw new ResourceNotFoundException("User with id " + usersId + " not found");
         }
+    }
+
+    public UserResponse createUser(@Valid UserCreateRequest userCreateRequest) {
+        User userToCreate = new User();
+        userToCreate.setUserName(userCreateRequest.userName());
+        userToCreate.setPassword(passwordEncoder.encode(userCreateRequest.password()));
+        userToCreate.setEmail(userCreateRequest.email());
+        userToCreate.setFirstName(userCreateRequest.firstName() != null ? userCreateRequest.firstName() : null);
+        userToCreate.setLastName(userCreateRequest.lastName() != null ? userCreateRequest.lastName() : null);
+        userToCreate.setPhoneNumber(userCreateRequest.phoneNumber());
+        userToCreate.setRole(userCreateRequest.role());
+
+        User savedUser = userDbPort.save(userToCreate);
+
+        return globalUserMapper.toUserResponse(savedUser);
     }
 }

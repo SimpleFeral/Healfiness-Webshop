@@ -14,4 +14,6 @@ public interface UserDbPort {
     Page<User> findAllUsersFlat(Integer page, Integer size, List<SortOrder> sortOrders);
 
     User findById(Long usersId);
+
+    User save(User userToCreate);
 }
