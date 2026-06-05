@@ -28,3 +28,7 @@ replay_pid*
 
 # Unblock example template #
 !*.env.example
+
+.idea/dataSources/data_sources_history.xml
+.idea/compiler.xml
+.idea/compiler.xml

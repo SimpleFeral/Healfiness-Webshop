@@ -3,7 +3,6 @@ package com.healfiness.backend.inbound.rest.controller;
 import com.healfiness.backend.core.application.services.OrderService;
 import com.healfiness.backend.core.domain.dto.orders.OrderResponse;
 import com.healfiness.backend.core.domain.dto.orders.OrderUpdateRequest;
-import com.healfiness.backend.shared.components.Schemas;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -12,6 +11,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class OrderController {
             description = "Retrieve details of a specific order by its unique identifier",
             operationId = "findOrderById",
             parameters = @Parameter(name = "ordersId", description = "The ID of the order to fetch for",
-                    in = ParameterIn.PATH, required = true, schema = @Schema(implementation = Schemas.Id.class)
+                    in = ParameterIn.PATH, required = true, schema = @Schema(implementation = Long.class)
             ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Order found and returned successfully",
@@ -56,8 +57,12 @@ public class OrderController {
                     )
             }
     )
-    public ResponseEntity<OrderResponse> findOrderById(@Valid @PathVariable Schemas.Id ordersId) {
-        return ResponseEntity.ok(orderService.findOrderById(ordersId.value()));
+    public ResponseEntity<OrderResponse> findOrderById(
+            @Valid @PathVariable @NotNull(message = "OrdersId cannot be null")
+            @Min(value = 1, message = "ID must be a positive integer")
+            @Schema(implementation = Long.class, example = "1") Long ordersId
+    ) {
+        return ResponseEntity.ok(orderService.findOrderById(ordersId));
     }
 
     @PatchMapping(path = "/{ordersId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +70,7 @@ public class OrderController {
             description = "Partially update an existing order's details using its unique identifier",
             operationId = "updateOrderById",
             parameters = @Parameter(name = "ordersId", description = "The ID of the order to update",
-                    in = ParameterIn.PATH, required = true, schema = @Schema(implementation = Schemas.Id.class)
+                    in = ParameterIn.PATH, required = true, schema = @Schema(implementation = Long.class)
             ),
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "The updated order fields",
@@ -97,9 +102,11 @@ public class OrderController {
             }
     )
     public ResponseEntity<OrderResponse> updateOrderById(
-            @Valid @PathVariable Schemas.Id ordersId,
+            @Valid @PathVariable @NotNull(message = "OrdersId cannot be null")
+            @Min(value = 1, message = "ID must be a positive integer")
+            @Schema(implementation = Long.class, example = "1") Long ordersId,
             @Valid @RequestBody OrderUpdateRequest orderUpdateRequest
     ) {
-        return ResponseEntity.ok(orderService.updateOrderById(ordersId.value(), orderUpdateRequest));
+        return ResponseEntity.ok(orderService.updateOrderById(ordersId, orderUpdateRequest));
     }
 }
