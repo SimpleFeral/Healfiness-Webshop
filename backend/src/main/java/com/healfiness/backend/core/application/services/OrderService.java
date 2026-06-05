@@ -2,9 +2,12 @@ package com.healfiness.backend.core.application.services;
 
 import com.healfiness.backend.core.application.ports.orders.OrderDbPort;
 import com.healfiness.backend.core.application.ports.products.ProductDbPort;
+import com.healfiness.backend.core.domain.dto.exceptions.UpdateFailureException;
 import com.healfiness.backend.core.domain.dto.orders.OrderCreateRequest;
 import com.healfiness.backend.core.domain.dto.orders.OrderItemResponse;
 import com.healfiness.backend.core.domain.dto.orders.OrderResponse;
+import com.healfiness.backend.core.domain.dto.orders.OrderUpdateRequest;
+import com.healfiness.backend.core.domain.dto.page.PageMetaData;
 import com.healfiness.backend.core.domain.dto.page.PageResponse;
 import com.healfiness.backend.core.domain.dto.page.SortOrder;
 import com.healfiness.backend.core.domain.dto.products.ProductSummary;
@@ -13,8 +16,13 @@ import com.healfiness.backend.core.domain.entities.orders.OrderItem;
 import com.healfiness.backend.core.domain.entities.products.Product;
 import com.healfiness.backend.core.domain.entities.users.User;
 import com.healfiness.backend.shared.components.Schemas;
+import com.healfiness.backend.shared.util.SortOrderMapper;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.List;
 
@@ -63,17 +71,17 @@ public class OrderService {
         return mapToOrderResponse(orderDbPort.save(orderToCreate));
     }
 
-    private OrderResponse mapToOrderResponse(Order savedOrder) {
-        if (savedOrder == null) {
+    private OrderResponse mapToOrderResponse(Order orderToMap) {
+        if (orderToMap == null) {
             return null;
         }
         return new OrderResponse(
-                new Schemas.Id(savedOrder.getOrdersId()),
-                savedOrder.getOrderStatus(),
-                new Schemas.Money(savedOrder.getTotalAmount()),
-                new Schemas.Timestamp(savedOrder.getOrderDate()),
-                savedOrder.getQuantity(),
-                savedOrder.getOrderItems().stream().map(
+                new Schemas.Id(orderToMap.getOrdersId()),
+                orderToMap.getOrderStatus(),
+                new Schemas.Money(orderToMap.getTotalAmount()),
+                new Schemas.Timestamp(orderToMap.getOrderDate()),
+                orderToMap.getQuantity(),
+                orderToMap.getOrderItems().stream().map(
                         item -> new OrderItemResponse(
                                 new Schemas.Id(item.getOrderItemsId()),
                                 item.getQuantity(),
@@ -85,7 +93,7 @@ public class OrderService {
                                 )
                         )
                 ).toList(),
-                new Schemas.Id(savedOrder.getUser().getUsersId())
+                new Schemas.Id(orderToMap.getUser().getUsersId())
         );
     }
 
@@ -95,6 +103,46 @@ public class OrderService {
             Integer size,
             List<SortOrder> sortOrders
     ) {
-        return null;
+        Page<Order> fetchedOrders = orderDbPort.findOrdersByUserId(usersId, page, size, sortOrders);
+        return new PageResponse<>(
+                fetchedOrders.getContent().stream()
+                        .map(this::mapToOrderResponse)
+                        .toList(),
+                new PageMetaData(
+                        fetchedOrders.getNumber(),
+                        fetchedOrders.getSize(),
+                        fetchedOrders.getTotalElements(),
+                        fetchedOrders.getTotalPages(),
+                        fetchedOrders.isLast(),
+                        SortOrderMapper.mapToDomainSort(fetchedOrders.getSort())
+                )
+        );
+    }
+
+    public OrderResponse findOrderById(Long ordersId) {
+        Order foundOrder = orderDbPort.findOrderById(ordersId);
+        return mapToOrderResponse(foundOrder);
+    }
+
+    public OrderResponse updateOrderById(
+            @Min(value = 1, message = "ID must be a positive integer") Long value,
+            @Valid OrderUpdateRequest orderUpdateRequest
+    ) {
+        Order existingOrder = orderDbPort.findOrderById(value);
+
+        for (Field field : OrderUpdateRequest.class.getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                Object newValue = field.get(orderUpdateRequest);
+                if (newValue != null) {
+                    field.set(existingOrder, newValue);
+                }
+            } catch (IllegalAccessException e) {
+                throw new UpdateFailureException("Failed to update order", e);
+            }
+        }
+
+        Order updatedOrder = orderDbPort.save(existingOrder);
+        return mapToOrderResponse(updatedOrder);
     }
 }

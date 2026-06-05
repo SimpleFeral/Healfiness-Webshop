@@ -1,6 +1,7 @@
 package com.healfiness.backend.core.application.handler;
 
 import com.healfiness.backend.core.domain.dto.exceptions.ResourceNotFoundException;
+import com.healfiness.backend.core.domain.dto.exceptions.UpdateFailureException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -65,6 +66,15 @@ public class GlobalExceptionHandler {
         problemDetail.setTitle("Constraint Violation");
         problemDetail.setType(URI.create("https://example.com/problems/constraint-violation"));
         problemDetail.setProperties(properties);
+        return problemDetail;
+    }
+
+    @ExceptionHandler(UpdateFailureException.class)
+    public ProblemDetail handleUpdateFailureException(UpdateFailureException ex) {
+        ProblemDetail problemDetail
+                = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        problemDetail.setTitle("Update Failure");
+        problemDetail.setType(URI.create("https://example.com/problems/update-failure"));
         return problemDetail;
     }
 }

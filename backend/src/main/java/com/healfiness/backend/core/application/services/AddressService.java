@@ -105,7 +105,7 @@ public class AddressService {
             Integer size,
             List<SortOrder> sortOrders
     ) {
-        Page<Address> addresses = addressDbPort.findAddressesByCurrentUser(usersId, page, size, sortOrders);
+        Page<Address> addresses = addressDbPort.findAddressesByUserId(usersId, page, size, sortOrders);
         return new PageResponse<>(
                 addresses.stream().map(this::mapToAddressResponse).toList(),
                 new PageMetaData(

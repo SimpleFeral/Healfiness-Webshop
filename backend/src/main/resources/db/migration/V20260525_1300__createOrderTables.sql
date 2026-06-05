@@ -39,5 +39,5 @@ create table order_items (
     product_id bigint not null references products(products_id),
     quantity bigint not null,
     order_date timestamp with time zone not null default current_timestamp,
-    singlePriceAtOrderTime numeric(10, 2) not null
+    single_price_at_order_time numeric(10, 2) not null
 );

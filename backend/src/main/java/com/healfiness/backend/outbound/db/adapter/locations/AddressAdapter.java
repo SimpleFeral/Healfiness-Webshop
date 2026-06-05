@@ -7,7 +7,9 @@ import com.healfiness.backend.core.domain.entities.locations.Address;
 import com.healfiness.backend.outbound.db.jpa.locations.AddressRepository;
 import com.healfiness.backend.outbound.db.jpaentities.locations.AddressEntity;
 import com.healfiness.backend.outbound.db.mapper.locations.AddressEntityMapper;
+import com.healfiness.backend.shared.util.SortOrderMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,11 +31,14 @@ public class AddressAdapter implements AddressDbPort {
     }
 
     @Override
-    public List<Address> findAddressesByUserId(Long usersId) {
-        return addressRepository.findAllByUsersId(usersId)
-                .stream()
-                .map(mapper::toDomainEntity)
-                .toList();
+    public Page<Address> findAddressesByUserId(
+            Long usersId,
+            Integer page,
+            Integer size,
+            List<SortOrder> sortOrders
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, size, SortOrderMapper.mapToSpringSort(sortOrders));
+        return addressRepository.findAllByUsersId(usersId, pageRequest);
     }
 
     @Override
@@ -50,13 +55,4 @@ public class AddressAdapter implements AddressDbPort {
         return mapper.toDomainEntity(savedEntity);
     }
 
-    @Override
-    public Page<Address> findAddressesByCurrentUser(
-            Long usersId,
-            Integer page,
-            Integer size,
-            List<SortOrder> sortOrders
-    ) {
-        return null;
-    }
 }

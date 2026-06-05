@@ -1,6 +1,7 @@
 package com.healfiness.backend.shared.components;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -13,6 +14,7 @@ public final class Schemas {
     public record Id(
             @Schema(type = "integer", format = "int64", example = "123",
                     accessMode = Schema.AccessMode.READ_ONLY, requiredMode = Schema.RequiredMode.REQUIRED)
+            @Min(value = 1, message = "ID must be a positive integer")
             Long value
     ) {
     }

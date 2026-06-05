@@ -18,7 +18,7 @@ create table cities (
     cities_id serial primary key,
     short_name char(3) not null,
     name character varying(255) not null,
-    iso_country_codes_id bigint references iso_country_codes(iso_country_codes_id) not null
+    iso_country_code_id bigint references iso_country_codes(iso_country_codes_id) not null
 );
 
 create type address_types as enum (

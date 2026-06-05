@@ -7,16 +7,15 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface AddressDbPort {
-    List<Address> findAddressesByUserId(Long usersId);
-
-    Address findById(Long addressId);
-
-    Address save(Address addressToCreate);
-
-    Page<Address> findAddressesByCurrentUser(
+    Page<Address> findAddressesByUserId(
             Long usersId,
             Integer page,
             Integer size,
             List<SortOrder> sortOrders
     );
+
+    Address findById(Long addressId);
+
+    Address save(Address addressToCreate);
+
 }

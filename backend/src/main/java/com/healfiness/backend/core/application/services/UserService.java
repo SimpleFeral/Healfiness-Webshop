@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -62,21 +63,31 @@ public class UserService {
 
         List<UserResponse> userResponses = new ArrayList<>();
         for (User user : allFoundFlatUsers) {
-            user.setAddresses(addressDbPort.findAddressesByUserId(user.getUsersId()));
-            user.setOrders(orderDbPort.findOrdersByUserId(user.getUsersId()));
+            user.setAddresses(addressDbPort.findAddressesByUserId(
+                    user.getUsersId(),
+                    null,
+                    null,
+                    Collections.emptyList()
+            ).getContent());
+            user.setOrders(orderDbPort.findOrdersByUserId(
+                    user.getUsersId(),
+                    null,
+                    null,
+                    Collections.emptyList()
+            ).getContent());
             user.setShoppingCarts(shoppingCartDbPort.findShoppingCartsByUserId(user.getUsersId()));
 
             userResponses.add(globalUserMapper.toUserResponse(user));
         }
         return new PageResponse<>(userResponses,
-                new PageMetaData(
-                        allFoundFlatUsers.getNumber(),
-                        allFoundFlatUsers.getSize(),
-                        allFoundFlatUsers.getTotalElements(),
-                        allFoundFlatUsers.getTotalPages(),
-                        allFoundFlatUsers.isLast(),
-                        SortOrderMapper.mapToDomainSort(allFoundFlatUsers.getSort())
-                )
+                                  new PageMetaData(
+                                          allFoundFlatUsers.getNumber(),
+                                          allFoundFlatUsers.getSize(),
+                                          allFoundFlatUsers.getTotalElements(),
+                                          allFoundFlatUsers.getTotalPages(),
+                                          allFoundFlatUsers.isLast(),
+                                          SortOrderMapper.mapToDomainSort(allFoundFlatUsers.getSort())
+                                  )
         );
     }
 
