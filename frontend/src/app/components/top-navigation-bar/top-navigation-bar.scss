@@ -1,0 +1,81 @@
+.app-toolbar {
+  height: 80px;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  background-color: #1976d2;
+}
+
+.menu-button {
+  margin-right: 16px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  margin-right: 32px;
+
+  mat-icon {
+    margin-right: 8px;
+    color: white;
+  }
+
+  span {
+    color: white;
+    font-size: 22px;
+    font-weight: 400;
+  }
+}
+
+.search-field {
+  width: 100%;
+  max-width: 750px;
+  margin-left: 20px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 1;
+
+  /* Textfarbe */
+  --mat-sys-on-surface: white;
+
+  /* Outline */
+  --mdc-outlined-text-field-outline-color: rgba(255, 255, 255, 0.3);
+  --mdc-outlined-text-field-hover-outline-color: rgba(255, 255, 255, 0.5);
+  --mdc-outlined-text-field-focus-outline-color: white;
+
+  /* Hintergrund */
+  --mdc-filled-text-field-container-color: transparent;
+
+  .mat-mdc-input-element {
+    color: white;
+  }
+
+  .mat-mdc-input-element::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+    opacity: 1;
+  }
+
+  mat-icon {
+    color: rgba(255, 255, 255, 0.7);
+    margin-right: 10px;
+  }
+
+}
+
+.input-field {
+  color: white;
+}
+
+.spacer {
+  flex: 1;
+}
+
+button[mat-icon-button] {
+  color: white;
+
+  mat-icon {
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+  }
+}

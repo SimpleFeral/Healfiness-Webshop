@@ -1,0 +1,30 @@
+<mat-toolbar color="transparent" class="app-toolbar">
+  <button mat-icon-button aria-label="menu" (click)="toggleDrawer()" class="menu-button">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <div class="brand">
+    <mat-icon>store</mat-icon>
+    <span>Healfiness Webshop</span>
+  </div>
+
+  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="search-field">
+    <mat-icon matPrefix>search</mat-icon>
+
+    <input matInput placeholder="Search products..."/>
+  </mat-form-field>
+
+  <span class="spacer"></span>
+
+  <button mat-icon-button aria-label="user profile">
+    <mat-icon>person</mat-icon>
+  </button>
+
+  <button mat-icon-button aria-label="settings">
+    <mat-icon>settings</mat-icon>
+  </button>
+
+  <button mat-icon-button aria-label="shopping cart">
+    <mat-icon>shopping_cart</mat-icon>
+  </button>
+</mat-toolbar>
