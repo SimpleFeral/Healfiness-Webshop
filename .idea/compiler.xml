@@ -9,7 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="api-specification" />
       </profile>
-      <profile name="Annotation profile for com.healfiness:healfiness" enabled="true">
+      <profile name="Annotation profile for com.healfiness-webshop:healfiness-webshop" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -29,7 +29,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-specification" options="-parameters" />
       <module name="backend" options="-parameters" />
-      <module name="healfiness" options="" />
+      <module name="healfiness-webshop" options="" />
     </option>
   </component>
 </project>
