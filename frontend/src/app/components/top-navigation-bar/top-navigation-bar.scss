@@ -1,23 +1,25 @@
 .app-toolbar {
-  height: 80px;
-  padding: 0 32px;
-  display: flex;
+  height: 80px; /* Höhe der Toolbar */
+  padding: 0 32px; /* Innenabstand links und rechts */
+  display: flex; /* Flexbox-Layout */
   align-items: center;
   background-color: #1976d2;
 }
 
 .menu-button {
-  margin-right: 16px;
+  margin-right: 16px; /* Abstand zwischen Menü-Button und Marke */
+  justify-content: center;
+  align-items: center;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  margin-left: 20px;
-  margin-right: 32px;
+  margin-left: 20px; /* Abstand zwischen Menü-Button und Marke */
+  margin-right: 32px; /* Abstand zwischen Marke und Suchleiste */
 
   mat-icon {
-    margin-right: 8px;
+    margin-right: 8px; /* Abstand zwischen Icon und Text */
     color: white;
   }
 
@@ -31,7 +33,7 @@
 .search-field {
   width: 100%;
   max-width: 750px;
-  margin-left: 20px;
+  margin-left: 20px; /* Abstand zwischen Marke und Suchleiste */
   background-color: rgba(255, 255, 255, 0.15);
   border-radius: 1;
 

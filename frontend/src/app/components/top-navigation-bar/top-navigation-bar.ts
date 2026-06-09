@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -14,8 +14,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 })
 export class TopNavigationBar {
   searchTerm: any;
+  @Output() toggleMenu = new EventEmitter<void>();
 
-  toggleDrawer(): void {
-    console.log('Drawer öffnen/schließen');
+  onMenuClick() {
+    this.toggleMenu.emit();
   }
 }

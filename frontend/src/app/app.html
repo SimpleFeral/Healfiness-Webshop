@@ -1,7 +1,15 @@
-<app-top-navigation-bar></app-top-navigation-bar>
+<div class="app-container">
+  <app-top-navigation-bar (toggleMenu)="drawer.toggle()"></app-top-navigation-bar>
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer mode="over" position="start">
+      <h2>Categories</h2>
+    </mat-sidenav>
 
-<main class="content">
-    <router-outlet/>
-</main>
-
-<app-footer></app-footer>
+    <mat-sidenav-content>
+      <main class="content">
+        <router-outlet />
+      </main>
+      <app-footer></app-footer>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
