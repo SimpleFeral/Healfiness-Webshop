@@ -1,0 +1,25 @@
+.news-card-wrapper {
+    height: 100%;
+    width: 100%;
+}
+
+mat-card {
+    height: 100%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+mat-card-content {
+    text-align: center;
+    color: white;
+}
+
+.news-title {
+  font-size: clamp(2rem, 5vw, 3.75rem);
+  font-weight: 500;
+}
+
+.news-subtitle {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+}

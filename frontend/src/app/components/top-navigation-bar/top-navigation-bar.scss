@@ -1,51 +1,34 @@
 .app-toolbar {
-  height: 80px; /* Höhe der Toolbar */
+  height: 80px;
   padding: 0 32px; /* Innenabstand links und rechts */
-  display: flex; /* Flexbox-Layout */
-  align-items: center;
   background-color: #1976d2;
-}
-
-.menu-button {
-  margin-right: 16px; /* Abstand zwischen Menü-Button und Marke */
-  justify-content: center;
-  align-items: center;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  margin-left: 20px; /* Abstand zwischen Menü-Button und Marke */
-  margin-right: 32px; /* Abstand zwischen Marke und Suchleiste */
 
   mat-icon {
-    margin-right: 8px; /* Abstand zwischen Icon und Text */
     color: white;
   }
+}
 
-  span {
-    color: white;
-    font-size: 22px;
-    font-weight: 400;
-  }
+.logo-icon {
+  margin-right: 4px;
+}
+
+.logo-text {
+  white-space: nowrap;
+  color: white;
 }
 
 .search-field {
   width: 100%;
   max-width: 750px;
-  margin-left: 20px; /* Abstand zwischen Marke und Suchleiste */
+  margin-left: 20px; 
   background-color: rgba(255, 255, 255, 0.15);
   border-radius: 1;
 
-  /* Textfarbe */
-  --mat-sys-on-surface: white;
 
-  /* Outline */
   --mdc-outlined-text-field-outline-color: rgba(255, 255, 255, 0.3);
   --mdc-outlined-text-field-hover-outline-color: rgba(255, 255, 255, 0.5);
   --mdc-outlined-text-field-focus-outline-color: white;
 
-  /* Hintergrund */
   --mdc-filled-text-field-container-color: transparent;
 
   .mat-mdc-input-element {
@@ -56,13 +39,7 @@
     color: rgba(255, 255, 255, 0.7);
     opacity: 1;
   }
-
-  mat-icon {
-    color: rgba(255, 255, 255, 0.7);
-    margin-right: 10px;
-  }
-
-}
+} 
 
 .input-field {
   color: white;
@@ -72,12 +49,21 @@
   flex: 1;
 }
 
-button[mat-icon-button] {
-  color: white;
+.desktop-only {
+  display: inline-flex;
+}
 
-  mat-icon {
-    font-size: 30px;
-    width: 30px;
-    height: 30px;
+@media (max-width: 768px) {
+  .logo-icon,
+  .logo-text {
+    display: none;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .search-field {
+    max-width: none;
   }
 }

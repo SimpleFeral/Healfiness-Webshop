@@ -1,3 +1,62 @@
-<app-news-carousel class="home-page-carousel"></app-news-carousel>
+<div class="home-page-wrapper">
+  <div class="news-carousel">
+    <swiper-container
+      slides-per-view="1"
+      navigation
+      pagination
+      centered-slides
+      loop
+      speed="500"
+      autoplay-delay="4500"
+      autoplay-disable-on-interaction="false"
+    >
+      <swiper-slide>
+        <app-news-slide
+          newsTitle="New arrivals"
+          newsSubtitle="Discover our latest collection"
+          bgColor="darkred"
+        />
+      </swiper-slide>
 
-<app-shop-info class="home-page-shop-info"></app-shop-info>
+      <swiper-slide>
+        <app-news-slide
+          newsTitle="New arrivals"
+          newsSubtitle="Discover our latest collection"
+          bgColor="darkviolet"
+        />
+      </swiper-slide>
+
+      <swiper-slide>
+        <app-news-slide
+          newsTitle="New arrivals"
+          newsSubtitle="Discover our latest collection"
+          bgColor="darkgreen"
+        />
+      </swiper-slide>
+    </swiper-container>
+  </div>
+
+  <section class="bestsellers">
+    <h2>Unsere Bestseller</h2>
+    <mat-grid-list cols="3" rowHeight="2:1">
+      <mat-grid-tile>
+        <app-product-card />
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <img src="assets/images/whey/cinnamon-cereal-whey.jpg" alt="Bestseller 2" />
+        <mat-grid-tile-footer>
+          <h3>Produktname 2</h3>
+          <p>Kurze Beschreibung des Produkts 2</p>
+        </mat-grid-tile-footer>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <img src="assets/images/whey/vanille-whey.jpg" alt="Bestseller 3" />
+        <mat-grid-tile-footer>
+          <h3>Produktname 3</h3>
+          <p>Kurze Beschreibung des Produkts 3</p>
+        </mat-grid-tile-footer>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </section>
+  <section class="shop-info"></section>
+</div>

@@ -1,30 +1,28 @@
-<mat-toolbar color="transparent" class="app-toolbar">
-  <button mat-icon-button aria-label="menu" (click)="onMenuClick()" class="menu-button">
+<mat-toolbar color="primary" class="app-toolbar">
+  <button mat-icon-button (click)="onMenuClick()" aria-label="Open menu">
     <mat-icon>menu</mat-icon>
   </button>
 
-  <div class="brand">
-    <mat-icon>store</mat-icon>
-    <span>Healfiness Webshop</span>
-  </div>
+  <mat-icon class="logo-icon">store</mat-icon>
+
+  <span class="logo-text">Healfitness Webshop</span>
 
   <mat-form-field appearance="outline" subscriptSizing="dynamic" class="search-field">
     <mat-icon matPrefix>search</mat-icon>
-
-    <input matInput placeholder="Search products..."/>
+    <input matInput placeholder="Search products..." />
   </mat-form-field>
 
   <span class="spacer"></span>
 
-  <button mat-icon-button aria-label="user profile">
+  <button mat-icon-button aria-label="Profile">
     <mat-icon>person</mat-icon>
   </button>
 
-  <button mat-icon-button aria-label="settings">
+  <button mat-icon-button aria-label="Settings" class="desktop-only">
     <mat-icon>settings</mat-icon>
   </button>
 
-  <button mat-icon-button aria-label="shopping cart">
+  <button mat-icon-button aria-label="Shopping cart">
     <mat-icon>shopping_cart</mat-icon>
   </button>
 </mat-toolbar>

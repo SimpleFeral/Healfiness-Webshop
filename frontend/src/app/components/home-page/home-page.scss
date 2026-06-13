@@ -1,7 +1,32 @@
-.home-page-carousel {
-  flex: 0 0 auto;
+.home-page-wrapper {
+  display: flex;
+  flex-direction: column;
 }
 
-.home-page-shop-info {
-  flex: 1;
+.news-carousel {
+  aspect-ratio: 24 / 6;
+}
+
+swiper-container {
+  height: 100%;
+  background-color: lightgray;
+}
+
+swiper-slide {
+  height: calc(100% - 32px);
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+app-news-slide {
+  object-fit: cover;
+} 
+
+.bestsellers {
+  padding: 0 16px;
+}
+
+.shop-info {
+  padding: 0 16px;
 }
