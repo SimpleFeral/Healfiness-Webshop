@@ -1,26 +1,7 @@
-.app-container {
-  height: 100vh;
-}
-
-app-top-navigation-bar {
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 2000;
-}
-
-.drawer-container {
-  height: calc(100vh - 80px);
+:host {
+  display: block;
 }
 
 .content {
-  flex-grow: 1;
-}
-
-@media (max-width: 599px) {
-  .drawer-container {
-    margin-top: 56px;
-    height: calc(100vh - 56px);
-  }
+  min-height: 100vh;
 }

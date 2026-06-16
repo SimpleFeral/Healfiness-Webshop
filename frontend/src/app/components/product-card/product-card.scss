@@ -1,0 +1,26 @@
+.product-wrapper {
+  overflow: hidden;
+}
+
+mat-card-title {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.product-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.product-price {
+  font-size: 1.5rem;
+  font-weight: 800;
+}

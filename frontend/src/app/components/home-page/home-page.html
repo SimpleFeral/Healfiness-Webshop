@@ -1,6 +1,8 @@
 <div class="home-page-wrapper">
   <div class="news-carousel">
     <swiper-container
+      #swiper
+      [class.ready]="swiperReady"
       slides-per-view="1"
       navigation
       pagination
@@ -20,16 +22,16 @@
 
       <swiper-slide>
         <app-news-slide
-          newsTitle="New arrivals"
-          newsSubtitle="Discover our latest collection"
+          newsTitle="Free shipping"
+          newsSubtitle="On orders over $49"
           bgColor="darkviolet"
         />
       </swiper-slide>
 
       <swiper-slide>
         <app-news-slide
-          newsTitle="New arrivals"
-          newsSubtitle="Discover our latest collection"
+          newsTitle="Coming soon..."
+          newsSubtitle="A new item drop will be launched soon"
           bgColor="darkgreen"
         />
       </swiper-slide>
@@ -38,25 +40,11 @@
 
   <section class="bestsellers">
     <h2>Unsere Bestseller</h2>
-    <mat-grid-list cols="3" rowHeight="2:1">
-      <mat-grid-tile>
-        <app-product-card />
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <img src="assets/images/whey/cinnamon-cereal-whey.jpg" alt="Bestseller 2" />
-        <mat-grid-tile-footer>
-          <h3>Produktname 2</h3>
-          <p>Kurze Beschreibung des Produkts 2</p>
-        </mat-grid-tile-footer>
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <img src="assets/images/whey/vanille-whey.jpg" alt="Bestseller 3" />
-        <mat-grid-tile-footer>
-          <h3>Produktname 3</h3>
-          <p>Kurze Beschreibung des Produkts 3</p>
-        </mat-grid-tile-footer>
-      </mat-grid-tile>
-    </mat-grid-list>
+    <div class="product-grid">
+      <app-product-card />
+      <app-product-card />
+      <app-product-card />
+    </div>
   </section>
   <section class="shop-info"></section>
 </div>
