@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ProductCard } from '../product-card/product-card';
 import { NewsSlide } from './news-slide/news-slide';
@@ -11,12 +11,12 @@ import { NewsSlide } from './news-slide/news-slide';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   standalone: true
 })
-export class HomePage {
-  swiperReady = false
+export class HomePage implements AfterViewInit {
+  isSwiperReady = signal<boolean>(false)
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.swiperReady = true
-    })
+      this.isSwiperReady.set(true)
+    }, 0)
   }
 }

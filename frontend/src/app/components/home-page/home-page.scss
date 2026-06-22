@@ -8,14 +8,9 @@
   max-height: 500px;
 }
 
-swiper-container {
-  visibility: hidden;
+.swiper-news {
   height: 100%;
   background-color: lightgray;
-}
-
-swiper-container.ready {
-  visibility: visible;
 }
 
 swiper-slide {
@@ -23,6 +18,10 @@ swiper-slide {
   text-align: center;
   align-items: center;
   justify-content: center;
+}
+
+.swiper-not-ready-placeholder {
+  height: 500px;
 }
 
 .bestsellers {

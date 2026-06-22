@@ -1,0 +1,67 @@
+<h2 mat-dialog-title>Anmelden</h2>
+<mat-dialog-content>
+  <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+    <mat-form-field appearance="fill">
+      <mat-label>Benutzername oder E-Mail</mat-label>
+      <input matInput placeholder="max.mustermann@example.com" formControlName="login" />
+      @if (loginControl.hasError('required')) {
+        <mat-error> Bitte geben Sie Benutzername oder E-Mail ein.</mat-error>
+      }
+      @if (loginControl.hasError('invalidLogin')) {
+        <mat-error>
+          Bitte geben Sie eine gültige E-Mail-Adresse oder einen gültigen Benutzernamen (max. 15
+          Zeichen) ein.
+        </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Passwort</mat-label>
+      <input
+        matInput
+        [type]="hide() ? 'password' : 'text'"
+        formControlName="password"
+        autocomplete="current-password"
+      />
+      <button
+        type="button"
+        matIconButton
+        matSuffix
+        (click)="clickEvent($event)"
+        [attr.aria-label]="hide() ? 'Passwort anzeigen' : 'Passwort verbergen'"
+        [attr.aria-pressed]="hide()"
+      >
+        <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if (passwordControl.hasError('required')) {
+        <mat-error> Bitte geben Sie Ihr Passwort ein.</mat-error>
+      }
+      @if (passwordControl.hasError('minlength')) {
+        <mat-error> Das Passwort muss mindestens 6 Zeichen lang sein.</mat-error>
+      }
+    </mat-form-field>
+
+    @if (loginError()) {
+      <div class="login-error">
+        {{ loginError() }}
+      </div>
+    }
+
+    <mat-dialog-actions>
+      <button type="button" mat-stroked-button (click)="onCancel()">Abbrechen</button>
+      <button
+        type="submit"
+        mat-flat-button
+        color="primary"
+        [disabled]="loginForm.invalid || isSubmitting()"
+      >
+        {{ isSubmitting() ? 'Anmeldung...' : 'Login' }}
+      </button>
+    </mat-dialog-actions>
+  </form>
+
+  <div class="registration-request">
+    <p>Noch kein Konto?</p>
+  </div>
+  <button type="button" mat-stroked-button>Konto erstellen</button>
+</mat-dialog-content>

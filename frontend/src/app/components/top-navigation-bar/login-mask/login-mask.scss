@@ -1,0 +1,20 @@
+mat-dialog-content {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+mat-dialog-actions {
+    align-items: center;
+    justify-content: center;
+}
+
+.registration-request {
+    align-self: center;
+    justify-self: center;
+}
